@@ -7,6 +7,7 @@ import cmath as cm
 from celluloid import Camera
 import datetime as dt
 
+
 root = Tk()
 root.title("Стержень")
 root.geometry("230x100+100+100")
