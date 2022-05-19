@@ -1,16 +1,16 @@
-from tkinter import *
-import math as m
-import matplotlib.pyplot as plt
-from tkinter import messagebox as mbox
-import numpy as np
 import cmath as cm
-from celluloid import Camera
 import datetime as dt
+import math as m
+from tkinter import *
+from tkinter import messagebox as mbox
 
+import matplotlib.pyplot as plt
+import numpy as np
+from celluloid import Camera
 
 root = Tk()
 root.title("Стержень")
-root.geometry("230x100+100+100")
+root.geometry("270x100+100+100")
 root.resizable(False, False)
 
 
@@ -169,7 +169,7 @@ def balka():
                         x += a_2 / 1000
 
                     ly = np.array(ly)
-                    #анимация
+                    # анимация
                     if r_var2.get() == 1:
                         lyy = ly  # сохранение ly для нулевого временного параметра
 
@@ -198,7 +198,7 @@ def balka():
                         x += a_2 / 1000
 
                     ly = np.array(ly)
-                    #анимация
+                    # анимация
                     if r_var2.get() == 1:
                         lyy = ly  # сохранение ly для нулевого временного параметра
 
@@ -231,7 +231,7 @@ def balka():
                         x += a_2 / 1000
 
                     ly = np.array(ly)
-                    #анимация
+                    # анимация
                     if r_var2.get() == 1:
                         lyy = ly  # сохранение ly для нулевого временного параметра
 
@@ -262,7 +262,7 @@ def balka():
                         x += a_2 / 1000
 
                     ly = np.array(ly)
-                    #анимация
+                    # анимация
                     if r_var2.get() == 1:
                         lyy = ly  # сохранение ly для нулевого временного параметра
 
@@ -291,7 +291,7 @@ def balka():
                         x += a_2 / 1000
 
                     ly = np.array(ly)
-                    #анимация
+                    # анимация
                     if r_var2.get() == 1:
                         lyy = ly  # сохранение ly для нулевого временного параметра
 
@@ -322,7 +322,7 @@ def balka():
                         x += a_2 / 1000
 
                     ly = np.array(ly)
-                    #анимация
+                    # анимация
                     if r_var2.get() == 1:
                         lyy = ly  # сохранение ly для нулевого временного параметра
 
@@ -493,7 +493,7 @@ def balka():
 
 def sterg():
     root2 = Toplevel()
-    root2.title("Моделирование стержня")
+    root2.title("Моделирование продольных колебаний стержня")
     root2.geometry("700x560+310+20")
     root2.resizable(False, False)
 
@@ -616,7 +616,7 @@ def sterg():
                 for i in range(len(lx)):
                     ch = ff * m.sin(w * lx[i] * m.sqrt(p / e))
                     ly[i] = ch / zn
-                #анимация
+                # анимация
                 if r_var1.get() == 1:
                     lyy = ly
 
@@ -641,7 +641,7 @@ def sterg():
                 for i in range(len(lx)):
                     ch = ff * (e * w * sig * m.cos(w * sig * lx[i]) + q * m.sin(w * sig * lx[i]))
                     ly[i] = ch / zn
-                #анимация
+                # анимация
                 if r_var1.get() == 1:
                     lyy = ly
 
@@ -654,7 +654,337 @@ def sterg():
                 mbox.showerror("Ошибка", "Происходит деление на ноль")
                 cheek += 1
 
-        #отрисовка графика
+        # отрисовка графика
+        if cheek == 0:
+            if r_var1.get() == 0:  # без анимации
+                if ss == 0:
+                    fig = plt.figure("Стержень закреплён жёстко.")
+                    plt.title("Стержень закреплён жёстко.\nГрафик отклонения стержня.".format(time))
+                else:
+                    fig = plt.figure(
+                        "Стержень закреплён не жёстко.")
+                    plt.title("Стержень закреплён не жёстко.\nГрафик отклонения стержня.".format(
+                        time))
+
+                plt.xlabel("Координаты стержня")
+                plt.ylabel("Отклонение стержня")
+                plt.plot(lx, ly, label="{}-я секунда m={}".format(time, mm))
+                plt.grid(True)
+                plt.legend()
+            else:  # с анимацией
+                gridsize = (1, 2)
+                if ss == 0:
+                    fig = plt.figure("Стержень закреплён жёстко", figsize=(11, 5))
+                else:
+                    fig = plt.figure("Стержень закреплён не жёстко",
+                                     figsize=(11, 5))
+                camera = Camera(fig)
+
+                ax2 = plt.subplot2grid(gridsize, (0, 1))
+                plt.title("Изменение отклонения со временем")
+                plt.grid(True)
+                plt.xlabel("Координаты стержня")
+                plt.ylabel("Отклонение стержня")
+
+                ttt = np.arange(0, 50, 0.5)
+                for timer in ttt:
+                    ly2 = lyy * cm.exp(timer * w * complex(0, -1))
+                    ly2 = ly2.real
+                    pl = plt.plot(lx, ly2, color="red")
+                    plt.legend(pl, ["{}-я секунда m={}".format(timer, mm)])
+                    camera.snap()
+
+                ax1 = plt.subplot2grid(gridsize, (0, 0))
+                if ss == 0:
+                    plt.title("Стержень закреплён жёстко\nграфик отклонения стержня".format(time))
+                else:
+                    plt.title("Стержень закреплён не жёстко\nграфик отклонения стержня".format(time))
+                plt.xlabel("Координаты стержня")
+                plt.ylabel("Отклонение стержня")
+                plt.plot(lx, ly, label="{}-я секунда m={}".format(time, mm), color="blue")
+                plt.grid(True)
+                plt.legend()
+                anim = camera.animate()
+
+                date = dt.datetime.now().strftime("%d-%m-%Y-%H.%M.%S")
+                anim.save("C:/Users/dimon/Pycharm/код/анимация/{}.gif".format(date), writer='imagemagick')
+        plt.show()
+
+    ###отрисовка интерфеса данного окна
+    q1 = Canvas(root2, width=430, height=400, bg="white")
+    q1.grid(row=0, column=0, rowspan=8, columnspan=10)
+    q1.create_rectangle(2, 2, 431, 401)
+    q1.create_rectangle(10, 30, 420.58, 391)
+    q1.create_text(239, 15, text="Зависимость собственных частот от массы тела")
+    q1.create_text(40, 45, text="m,w", font="Arial 15")
+    x = 78.42
+    for i in range(6):
+        q1.create_line(x, 30, x, 391)
+        x += 68.42
+    x = 62.81
+    for i in range(10):
+        q1.create_line(10, x, 420.58, x)
+        x += 32.81
+    x = 110
+    for i in range(5):
+        a = str(i + 1)
+        q1.create_text(x, 45, text=a, font="Arial 15")
+        x += 70
+    x = 80
+    for i in range(10):
+        a = str(i + 1)
+        q1.create_text(40, x, text=a, font="Arial 15")
+        x += 33
+
+    # Label
+    l1 = Label(root2, text="Входные данные:", font="Arial 15")
+    l1.grid(row=8, column=0, columnspan=8, sticky=W)
+    l2 = Label(root2, text="Граничные условия:", font="Arial 15")
+    l2.grid(row=0, column=10, columnspan=3, sticky=W)
+    l3 = Label(root2, text="Дополнительные данные:", font="Arial 15")
+    l3.grid(row=4, column=10, columnspan=3, sticky=SW)
+
+    e_l = Label(root2, text="E=")
+    f_l = Label(root2, text="F=")
+    m_l = Label(root2, text="m=")
+    w_l = Label(root2, text="w=")
+    t_l = Label(root2, text="точность=")
+    p_l = Label(root2, text="p=")
+    s_l = Label(root2, text="s=")
+    l_l = Label(root2, text="l=")
+    time_l = Label(root2, text="время=")
+    ny_l = Label(root2, text="Коэф. Пуассона=")
+    h_l = Label(root2, text="Ширина упругой полосы=")
+    a_l = Label(root2, text="Ширина стержня=")
+
+    e_l.grid(row=9, column=0, sticky=W)
+    f_l.grid(row=10, column=0, sticky=W)
+    m_l.grid(row=11, column=0, sticky=W)
+    w_l.grid(row=12, column=0, sticky=W)
+
+    p_l.grid(row=9, column=4, sticky=W)
+    s_l.grid(row=10, column=4, sticky=W)
+    l_l.grid(row=11, column=4, sticky=W)
+    time_l.grid(row=12, column=4, sticky=W)
+    ny_l.grid(row=5, column=10, sticky=NW)
+    h_l.grid(row=6, column=10, sticky=NW)
+    a_l.grid(row=7, column=10, sticky=NW)
+
+    # Entry
+    e_e = Entry(root2)
+    f_e = Entry(root2)
+    m_e = Entry(root2)
+    w_e = Entry(root2)
+
+    p_e = Entry(root2)
+    s_e = Entry(root2)
+    l_e = Entry(root2)
+    time_e = Entry(root2)
+    ny_e = Entry(root2, width=15)
+    h_e = Entry(root2, width=15)
+    a_e = Entry(root2, width=15)
+
+    e_e.grid(row=9, column=1, columnspan=2)
+    f_e.grid(row=10, column=1, columnspan=2)
+    m_e.grid(row=11, column=1, columnspan=2)
+    w_e.grid(row=12, column=1, columnspan=2)
+    p_e.grid(row=9, column=5, columnspan=2)
+    s_e.grid(row=10, column=5, columnspan=2)
+    l_e.grid(row=11, column=5, columnspan=2)
+    time_e.grid(row=12, column=5, columnspan=2)
+    ny_e.grid(row=5, column=11, sticky=NW)
+    h_e.grid(row=6, column=11, sticky=NW)
+    a_e.grid(row=7, column=11, sticky=NW)
+
+    # Button
+    b1 = Button(root2, text="Рассчитать", bg="orange", command=tableSterg)
+    b1.grid(row=13, column=11)
+    b2 = Button(root2, text="Очистить", bd=0, command=clean)
+    b2.grid(row=13, column=10)
+
+    # Radiobutton
+    r_var = IntVar()
+    r_var.set(0)
+    r_1 = Radiobutton(root2, text="Стержень закреплён жёстко", variable=r_var, value=0)
+    r_2 = Radiobutton(root2,
+                      text="Стержень без трения контактирует с\nполуограниченным деформируемым\nоснованием средой"
+                           "\n(Необходимы дополнительные данные)",
+                      variable=r_var, value=1)
+    r_1.grid(row=1, column=10, columnspan=3, sticky=W)
+    r_2.grid(row=2, column=10, columnspan=3, sticky=W)
+
+    # checkbutton
+    r_var1 = IntVar()
+    r_var1.set(0)
+    ch1 = Checkbutton(root2, text="Анимация", variable=r_var1, onvalue=1, offvalue=0)
+    ch1.grid(row=9, column=10, sticky=W)
+    root2.mainloop()
+
+
+def sterg2():
+    root2 = Toplevel()
+    root2.title("Моделирование поперечно-изгибных колебаний стержня")
+    root2.geometry("700x560+310+20")
+    root2.resizable(False, False)
+
+    def clean():  # обработчик кнопки очистка
+        e_e.delete(0, END)
+        f_e.delete(0, END)
+        m_e.delete(0, END)
+        w_e.delete(0, END)
+        p_e.delete(0, END)
+        s_e.delete(0, END)
+        l_e.delete(0, END)
+        time_e.delete(0, END)
+        ny_e.delete(0, END)
+        a_e.delete(0, END)
+        h_e.delete(0, END)
+        r_var.set(0)
+        q1.delete("txt")
+
+    def f(x):
+        ss = r_var.get()
+        s = float(s_e.get())
+        p = float(p_e.get())
+        e = float(e_e.get())
+        sig = m.sqrt(p / e)
+        ll = float(l_e.get())
+        ny = float(ny_e.get())
+        a = float(a_e.get())
+        a = a / 2
+        h = float(h_e.get())
+        global mi
+        if ss == 0 and m.tan(sig * x) != 0:
+            return ((s * sig * e * ll) / (ll * m.tan(sig * x * ll))) - x * mi
+        elif ss == 1:
+            q = 2 * x * a * m.sqrt(p * ny / e) * (
+                    m.cos(2 * h * x * m.sqrt(p * ny / e)) / m.sin(2 * h * x * m.sqrt(p * ny / e)))
+            return e * x * sig * (q - x * x * mi) * m.cos(x * sig * ll) - x * x * (
+                    mi * q + e * e * sig) * m.sin(
+                x * sig * ll)
+
+    def v2(x, y):
+        s = (f(y) - f(x)) / (y - x)
+        return s
+
+    def v3(y0, y1, y2):
+        s = (v2(y1, y2) - v2(y0, y1)) / (y2 - y0)
+        return s
+
+    def find(eps, x0, x1, x2):
+        s = f(x0)
+        s1 = f(x2)
+        while True:
+            w = v2(x1, x2) + (x2 - x1) * v3(x0, x1, x2)
+            if s > s1:
+                xn = x2 - (2 * f(x2)) / (w - m.sqrt(w * w - 4 * f(x2) * v3(x0, x1, x2)))
+            elif s < s1:
+                xn = x2 - (2 * f(x2)) / (w + m.sqrt(w * w - 4 * f(x2) * v3(x0, x1, x2)))
+            if (abs(xn - x2) < eps) and (f(xn) < eps):
+                return xn
+            x0 = x1
+            x1 = x2
+            x2 = xn
+
+    #####################################################
+
+    def tableSterg():
+        global l
+        global lx
+        global ly
+        global mi  ###################################
+        l = list(l)
+        ly = list(ly)
+        lx.clear()
+        ly.clear()
+        l.clear()
+        q1.delete("txt")
+        ff = float(f_e.get())
+        w = float(w_e.get())
+        p = float(p_e.get())
+        e = float(e_e.get())
+        s = float(s_e.get())
+        ll = float(l_e.get())
+        mm = float(m_e.get())
+        time = float(time_e.get())
+        ny = float(ny_e.get())
+        a = float(a_e.get())
+        a = a / 2
+        h = float(h_e.get())
+        ss = r_var.get()
+        lx = list(np.linspace(0, ll, 1000))
+        ly = np.zeros(1000)
+        cheek = 0
+        ####заполнение таблицы
+        shag = 0.00001
+        y = 80
+        for i in range(1, 11, 1):
+            mi = i
+            x = 110
+            xx = shag
+            if ss == 0:
+                sc = True
+            else:
+                sc = False
+            while len(l) < 6:
+                if f(xx) * f(xx + shag) < 0:
+                    if sc == True:
+                        v = find(0.0001, xx, xx + shag / 2, xx + shag)
+                        v = float("{0:.5f}".format(v))
+                        q1.create_text(x, y, text=str(v), font="Arial 10", tag="txt")
+                        x += 70
+                        sc = False
+                    else:
+                        sc = True
+                xx += shag
+            y += 33
+        ######################
+        if ss == 0:
+            try:
+                zn = (w * s * m.sqrt(e * p) * m.cos(w * ll * m.sqrt(p / e))) - (
+                        w * w * mm * m.sin(w * ll * m.sqrt(p / e)))
+                for i in range(len(lx)):
+                    ch = ff * m.sin(w * lx[i] * m.sqrt(p / e))
+                    ly[i] = ch / zn
+                # анимация
+                if r_var1.get() == 1:
+                    lyy = ly
+
+                ly = ly * cm.exp(time * w * complex(0, -1))
+                ly = ly.real
+            except ValueError:
+                mbox.showerror("Ошибка", "Отрицательное число под корнем")
+                cheek += 1
+            except ZeroDivisionError:
+                mbox.showerror("Ошибка", "Происходит деление на ноль")
+                cheek += 1
+
+        else:
+            try:
+                ct = m.cos(h * w * m.sqrt(p * (e / (2 * (1 - ny))) / ((1 - 2 * ny) / (2 - 2 * ny)))) / m.sin(
+                    h * w * m.sqrt(p * (e / (2 * (1 - ny))) / ((1 - 2 * ny) / (2 - 2 * ny))))
+                q = 2 * w * a * m.sqrt(p * (e / (2 * (1 - ny))) / ((1 - 2 * ny) / (2 - 2 * ny))) * ct
+                sig = m.sqrt(p / e)
+                zn = e * w * sig * (q - w * w * mm) * m.cos(w * sig * ll) - w * w * (
+                        mm * q + e * e * sig * sig) * m.sin(
+                    w * sig * ll)
+                for i in range(len(lx)):
+                    ch = ff * (e * w * sig * m.cos(w * sig * lx[i]) + q * m.sin(w * sig * lx[i]))
+                    ly[i] = ch / zn
+                # анимация
+                if r_var1.get() == 1:
+                    lyy = ly
+
+                ly = ly * cm.exp(time * w * complex(0, -1))
+                ly = ly.real
+            except ValueError:
+                mbox.showerror("Ошибка", "Отрицательное число под корнем")
+                cheek += 1
+            except ZeroDivisionError:
+                mbox.showerror("Ошибка", "Происходит деление на ноль")
+                cheek += 1
+
+        # отрисовка графика
         if cheek == 0:
             if r_var1.get() == 0:  # без анимации
                 if ss == 0:
@@ -824,10 +1154,12 @@ def sterg():
 l1 = Label(root, text="ВЫБЕРЕТЕ ВИД ВЫЧИСЛЕНИЙ:")
 l1.pack(side=TOP)
 
-buttonBalka = Button(root, text="Поперечно-изгибные колебания", width=30, command=balka)
-buttonBalka.pack(side=TOP)
-buttonSterg = Button(root, text="Продольные колебания", width=30, command=sterg)
-buttonSterg.pack(side=TOP)
+button_Balka = Button(root, text="Продольные колебания балки", width=35, command=balka)
+button_Balka.pack(side=TOP)
+button_Sterg_prodol = Button(root, text="Продольные колебания стержня", width=35, command=sterg)
+button_Sterg_prodol.pack(side=TOP)
+button_Sterg_poperek = Button(root, text="Поперечно-изгибные колебания стрежня", width=35, command=sterg2)
+button_Sterg_poperek.pack(side=TOP)
 l = []
 lx = []
 ly = []
