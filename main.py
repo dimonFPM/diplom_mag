@@ -1,6 +1,6 @@
 import cmath as cm
 import datetime as dt
-import math as m
+import math as math
 from tkinter import *
 from tkinter import messagebox as mbox
 
@@ -36,9 +36,9 @@ def balka():
     def f(x):
         s = r_var.get()
         if s == 1:
-            return m.cos(x)
+            return math.cos(x)
         elif (s == 0) or (s == 2):
-            return m.tan(x) + m.tanh(x)
+            return math.tan(x) + math.tanh(x)
 
     def v2(x, y):
         s = (f(y) - f(x)) / (y - x)
@@ -54,9 +54,9 @@ def balka():
         while True:
             w = v2(x1, x2) + (x2 - x1) * v3(x0, x1, x2)
             if s > s1:
-                xn = x2 - (2 * f(x2)) / (w - m.sqrt(w * w - 4 * f(x2) * v3(x0, x1, x2)))
+                xn = x2 - (2 * f(x2)) / (w - math.sqrt(w * w - 4 * f(x2) * v3(x0, x1, x2)))
             elif s < s1:
-                xn = x2 - (2 * f(x2)) / (w + m.sqrt(w * w - 4 * f(x2) * v3(x0, x1, x2)))
+                xn = x2 - (2 * f(x2)) / (w + math.sqrt(w * w - 4 * f(x2) * v3(x0, x1, x2)))
             if (abs(xn - x2) < eps) and (f(xn) < eps):
                 return xn
             x0 = x1
@@ -155,7 +155,7 @@ def balka():
                         lx.append(x)
                         for k in range(100):
                             size_pr = size_tec
-                            ch = ((-1) ** (k + 2)) * m.cos(x * l[k])
+                            ch = ((-1) ** (k + 2)) * math.cos(x * l[k])
                             zn = ((float(e_e.get()) * float(j_e.get()) * l[k] ** 4) - (
                                     float(m_e.get()) * float(w_e.get()) ** 2) + float(k_e.get())) * l[k]
                             size_tec = ch / zn
@@ -184,7 +184,7 @@ def balka():
                         lx.append(x)
                         for k in range(100):
                             size_pr = size_tec
-                            ch = ((-1) ** (k + 2)) * ((a_2 ** 2) * (l[k] ** 2) - 2) * m.cos(x * l[k])
+                            ch = ((-1) ** (k + 2)) * ((a_2 ** 2) * (l[k] ** 2) - 2) * math.cos(x * l[k])
                             zn = ((float(e_e.get()) * float(j_e.get()) * l[k] ** 4) - (
                                     float(m_e.get()) * float(w_e.get()) ** 2) + float(k_e.get())) * l[k] ** 3
                             size_tec = ch / zn
@@ -215,11 +215,12 @@ def balka():
                         lx.append(x)
                         for k in range(100):
                             size_pr = size_tec
-                            ch = (m.tanh(a_2 * l[k]) / l[k]) * (
-                                    m.cosh(x * l[k]) / m.cosh(a_2 * l[k]) - m.cos(x * l[k]) / m.cos(a_2 * l[k]))
+                            ch = (math.tanh(a_2 * l[k]) / l[k]) * (
+                                    math.cosh(x * l[k]) / math.cosh(a_2 * l[k]) - math.cos(x * l[k]) / math.cos(
+                                a_2 * l[k]))
                             zn = ((float(e_e.get()) * float(j_e.get()) * l[k] ** 4) - (
                                     float(m_e.get()) * float(w_e.get()) ** 2) + float(k_e.get())) * (
-                                         a_2 / ((m.cosh(a_2 * l[k])) ** 2) + a_2 / ((m.cos(
+                                         a_2 / ((math.cosh(a_2 * l[k])) ** 2) + a_2 / ((math.cos(
                                      a_2 * l[k])) ** 2))
                             size_tec = ch / zn
                             if abs(size_tec - size_pr) < eps:
@@ -246,11 +247,12 @@ def balka():
                         lx.append(x)
                         for k in range(100):
                             size_pr = size_tec
-                            ch = ((-8 * a_2 / l[k] ** 2) + (4 * a_2 ** 2 * m.tanh(a_2 * l[k]) / l[k])) * (
-                                    m.cosh(x * l[k]) / m.cosh(a_2 * l[k]) - m.cos(x * l[k]) / m.cos(a_2 * l[k]))
+                            ch = ((-8 * a_2 / l[k] ** 2) + (4 * a_2 ** 2 * math.tanh(a_2 * l[k]) / l[k])) * (
+                                    math.cosh(x * l[k]) / math.cosh(a_2 * l[k]) - math.cos(x * l[k]) / math.cos(
+                                a_2 * l[k]))
                             zn = ((float(e_e.get()) * float(j_e.get()) * l[k] ** 4) - (
                                     float(m_e.get()) * float(w_e.get()) ** 2) + float(k_e.get())) * (
-                                         a_2 / ((m.cosh(a_2 * l[k])) ** 2) + a_2 / ((m.cos(
+                                         a_2 / ((math.cosh(a_2 * l[k])) ** 2) + a_2 / ((math.cos(
                                      a_2 * l[k])) ** 2))
                             size_tec = ch / zn
                             if abs(size_tec - size_pr) < eps:
@@ -306,11 +308,12 @@ def balka():
                         lx.append(x)
                         for k in range(100):
                             size_pr = size_tec
-                            ch = ((8 / (l[k] ** 3)) * (m.tanh(l[k] * a_2))) * (
-                                (m.cosh(l[k] * x) / m.cosh(l[k] * a_2) + m.cos(l[k] * x) / m.cos(l[k] * a_2)))
+                            ch = ((8 / (l[k] ** 3)) * (math.tanh(l[k] * a_2))) * (
+                                (math.cosh(l[k] * x) / math.cosh(l[k] * a_2) + math.cos(l[k] * x) / math.cos(
+                                    l[k] * a_2)))
                             zn = ((float(e_e.get()) * float(j_e.get()) * l[k] ** 4) - (
                                     float(m_e.get()) * float(w_e.get()) ** 2) + float(k_e.get())) * (
-                                         a_2 / ((m.cosh(a_2 * l[k])) ** 2) + a_2 / ((m.cos(a_2 * l[k])) ** 2))
+                                         a_2 / ((math.cosh(a_2 * l[k])) ** 2) + a_2 / ((math.cos(a_2 * l[k])) ** 2))
                             size_tec = ch / zn
                             if abs(size_tec - size_pr) < eps:
                                 break
@@ -517,20 +520,20 @@ def sterg():
         s = float(s_e.get())
         p = float(p_e.get())
         e = float(e_e.get())
-        sig = m.sqrt(p / e)
+        sig = math.sqrt(p / e)
         ll = float(l_e.get())
         ny = float(ny_e.get())
         a = float(a_e.get())
         a = a / 2
         h = float(h_e.get())
         global mi
-        if ss == 0 and m.tan(sig * x) != 0:
-            return ((s * sig * e * ll) / (ll * m.tan(sig * x * ll))) - x * mi
+        if ss == 0 and math.tan(sig * x) != 0:
+            return ((s * sig * e * ll) / (ll * math.tan(sig * x * ll))) - x * mi
         elif ss == 1:
-            q = 2 * x * a * m.sqrt(p * ny / e) * (
-                    m.cos(2 * h * x * m.sqrt(p * ny / e)) / m.sin(2 * h * x * m.sqrt(p * ny / e)))
-            return e * x * sig * (q - x * x * mi) * m.cos(x * sig * ll) - x * x * (
-                    mi * q + e * e * sig) * m.sin(
+            q = 2 * x * a * math.sqrt(p * ny / e) * (
+                    math.cos(2 * h * x * math.sqrt(p * ny / e)) / math.sin(2 * h * x * math.sqrt(p * ny / e)))
+            return e * x * sig * (q - x * x * mi) * math.cos(x * sig * ll) - x * x * (
+                    mi * q + e * e * sig) * math.sin(
                 x * sig * ll)
 
     def v2(x, y):
@@ -547,9 +550,9 @@ def sterg():
         while True:
             w = v2(x1, x2) + (x2 - x1) * v3(x0, x1, x2)
             if s > s1:
-                xn = x2 - (2 * f(x2)) / (w - m.sqrt(w * w - 4 * f(x2) * v3(x0, x1, x2)))
+                xn = x2 - (2 * f(x2)) / (w - math.sqrt(w * w - 4 * f(x2) * v3(x0, x1, x2)))
             elif s < s1:
-                xn = x2 - (2 * f(x2)) / (w + m.sqrt(w * w - 4 * f(x2) * v3(x0, x1, x2)))
+                xn = x2 - (2 * f(x2)) / (w + math.sqrt(w * w - 4 * f(x2) * v3(x0, x1, x2)))
             if (abs(xn - x2) < eps) and (f(xn) < eps):
                 return xn
             x0 = x1
@@ -611,10 +614,10 @@ def sterg():
         ######################
         if ss == 0:
             try:
-                zn = (w * s * m.sqrt(e * p) * m.cos(w * ll * m.sqrt(p / e))) - (
-                        w * w * mm * m.sin(w * ll * m.sqrt(p / e)))
+                zn = (w * s * math.sqrt(e * p) * math.cos(w * ll * math.sqrt(p / e))) - (
+                        w * w * mm * math.sin(w * ll * math.sqrt(p / e)))
                 for i in range(len(lx)):
-                    ch = ff * m.sin(w * lx[i] * m.sqrt(p / e))
+                    ch = ff * math.sin(w * lx[i] * math.sqrt(p / e))
                     ly[i] = ch / zn
                 # анимация
                 if r_var1.get() == 1:
@@ -631,15 +634,15 @@ def sterg():
 
         else:
             try:
-                ct = m.cos(h * w * m.sqrt(p * (e / (2 * (1 - ny))) / ((1 - 2 * ny) / (2 - 2 * ny)))) / m.sin(
-                    h * w * m.sqrt(p * (e / (2 * (1 - ny))) / ((1 - 2 * ny) / (2 - 2 * ny))))
-                q = 2 * w * a * m.sqrt(p * (e / (2 * (1 - ny))) / ((1 - 2 * ny) / (2 - 2 * ny))) * ct
-                sig = m.sqrt(p / e)
-                zn = e * w * sig * (q - w * w * mm) * m.cos(w * sig * ll) - w * w * (
-                        mm * q + e * e * sig * sig) * m.sin(
+                ct = math.cos(h * w * math.sqrt(p * (e / (2 * (1 - ny))) / ((1 - 2 * ny) / (2 - 2 * ny)))) / math.sin(
+                    h * w * math.sqrt(p * (e / (2 * (1 - ny))) / ((1 - 2 * ny) / (2 - 2 * ny))))
+                q = 2 * w * a * math.sqrt(p * (e / (2 * (1 - ny))) / ((1 - 2 * ny) / (2 - 2 * ny))) * ct
+                sig = math.sqrt(p / e)
+                zn = e * w * sig * (q - w * w * mm) * math.cos(w * sig * ll) - w * w * (
+                        mm * q + e * e * sig * sig) * math.sin(
                     w * sig * ll)
                 for i in range(len(lx)):
-                    ch = ff * (e * w * sig * m.cos(w * sig * lx[i]) + q * m.sin(w * sig * lx[i]))
+                    ch = ff * (e * w * sig * math.cos(w * sig * lx[i]) + q * math.sin(w * sig * lx[i]))
                     ly[i] = ch / zn
                 # анимация
                 if r_var1.get() == 1:
@@ -828,65 +831,112 @@ def sterg2():
     root2.resizable(False, False)
 
     def clean():  # обработчик кнопки очистка
-        e_e.delete(0, END)
-        f_e.delete(0, END)
-        m_e.delete(0, END)
+        E_e.delete(0, END)
+        J_e.delete(0, END)
+        P_e.delete(0, END)
+        n_e.delete(0, END)
         w_e.delete(0, END)
         p_e.delete(0, END)
         s_e.delete(0, END)
         l_e.delete(0, END)
         time_e.delete(0, END)
+        #####
         ny_e.delete(0, END)
         a_e.delete(0, END)
         h_e.delete(0, END)
+        #####
         r_var.set(0)
         q1.delete("txt")
 
-    def f(x):
-        ss = r_var.get()
-        s = float(s_e.get())
-        p = float(p_e.get())
-        e = float(e_e.get())
-        sig = m.sqrt(p / e)
-        ll = float(l_e.get())
-        ny = float(ny_e.get())
-        a = float(a_e.get())
-        a = a / 2
-        h = float(h_e.get())
-        global mi
-        if ss == 0 and m.tan(sig * x) != 0:
-            return ((s * sig * e * ll) / (ll * m.tan(sig * x * ll))) - x * mi
-        elif ss == 1:
-            q = 2 * x * a * m.sqrt(p * ny / e) * (
-                    m.cos(2 * h * x * m.sqrt(p * ny / e)) / m.sin(2 * h * x * m.sqrt(p * ny / e)))
-            return e * x * sig * (q - x * x * mi) * m.cos(x * sig * ll) - x * x * (
-                    mi * q + e * e * sig) * m.sin(
-                x * sig * ll)
-
-    def v2(x, y):
-        s = (f(y) - f(x)) / (y - x)
-        return s
-
-    def v3(y0, y1, y2):
-        s = (v2(y1, y2) - v2(y0, y1)) / (y2 - y0)
-        return s
-
-    def find(eps, x0, x1, x2):
-        s = f(x0)
-        s1 = f(x2)
-        while True:
-            w = v2(x1, x2) + (x2 - x1) * v3(x0, x1, x2)
-            if s > s1:
-                xn = x2 - (2 * f(x2)) / (w - m.sqrt(w * w - 4 * f(x2) * v3(x0, x1, x2)))
-            elif s < s1:
-                xn = x2 - (2 * f(x2)) / (w + m.sqrt(w * w - 4 * f(x2) * v3(x0, x1, x2)))
-            if (abs(xn - x2) < eps) and (f(xn) < eps):
-                return xn
-            x0 = x1
-            x1 = x2
-            x2 = xn
+    # def f(x):
+    #     ss = r_var.get()
+    #     s = float(s_e.get())
+    #     p = float(p_e.get())
+    #     e = float(E_e.get())
+    #     sig = math.sqrt(p / e)
+    #     ll = float(l_e.get())
+    #     ny = float(ny_e.get())
+    #     a = float(a_e.get())
+    #     a = a / 2
+    #     h = float(h_e.get())
+    #     global mi
+    #     if ss == 0 and math.tan(sig * x) != 0:
+    #         return ((s * sig * e * ll) / (ll * math.tan(sig * x * ll))) - x * mi
+    #     elif ss == 1:
+    #         q = 2 * x * a * math.sqrt(p * ny / e) * (
+    #                 math.cos(2 * h * x * math.sqrt(p * ny / e)) / math.sin(2 * h * x * math.sqrt(p * ny / e)))
+    #         return e * x * sig * (q - x * x * mi) * math.cos(x * sig * ll) - x * x * (
+    #                 mi * q + e * e * sig) * math.sin(
+    #             x * sig * ll)
+    #
+    # def v2(x, y):
+    #     s = (f(y) - f(x)) / (y - x)
+    #     return s
+    #
+    # def v3(y0, y1, y2):
+    #     s = (v2(y1, y2) - v2(y0, y1)) / (y2 - y0)
+    #     return s
+    #
+    # def find(eps, x0, x1, x2):
+    #     s = f(x0)
+    #     s1 = f(x2)
+    #     while True:
+    #         w = v2(x1, x2) + (x2 - x1) * v3(x0, x1, x2)
+    #         if s > s1:
+    #             xn = x2 - (2 * f(x2)) / (w - math.sqrt(w * w - 4 * f(x2) * v3(x0, x1, x2)))
+    #         elif s < s1:
+    #             xn = x2 - (2 * f(x2)) / (w + math.sqrt(w * w - 4 * f(x2) * v3(x0, x1, x2)))
+    #         if (abs(xn - x2) < eps) and (f(xn) < eps):
+    #             return xn
+    #         x0 = x1
+    #         x1 = x2
+    #         x2 = xn
 
     #####################################################
+    def get_values(*names):
+        try:
+            value_list = [float(i.get()) for i in names if i.get() != ""]
+        except:
+            print("не число")
+            return None
+        if len(names) == len(value_list):
+            return value_list
+        else:
+            print("одно из полей не заполнено")
+            return None
+
+    def compute_frequency1(l, e, j, m, k):
+        return (((math.pi ** 2 * (1 / 4 + k + k ** 2)) / l ** 2) * math.sqrt(e * j / m))
+
+    def compute_frequency2(l, e, j, m, k):
+        return (((math.pi ** 2 * k ** 2) / l ** 2) * math.sqrt(e * j / m))
+
+    def compute_frequency3(l, e, j, m, k):
+        return (((math.pi ** 2 * k ** 2) / l ** 2) * math.sqrt(e * j / m))
+
+    def compute_frequency4(l, e, j, m, k):
+        return (((math.pi ** 2 * (1 / 4 + k + k ** 2)) / l ** 2) * math.sqrt(e * j / m))
+
+    def compute_table(radiobutton_value, canvas, l, e, j):
+        canvas.delete("txt")
+        y = 80
+        for m in range(1, 11):
+            x = 110
+            print(f"m={m}")
+            for k in range(1, 6):
+                if radiobutton_value == 0:
+                    res = compute_frequency1(l, e, j, m, k)
+                elif radiobutton_value == 1:
+                    res = compute_frequency2(l, e, j, m, k)
+                elif radiobutton_value == 2:
+                    res = compute_frequency3(l, e, j, m, k)
+                elif radiobutton_value == 3:
+                    res = compute_frequency4(l, e, j, m, k)
+                res = "%.4f" % res
+                q1.create_text(x, y, text=str(res), font="Arial 10", tag="txt")
+                x += 70
+                print(f"k={k}")
+            y += 33
 
     def tableSterg():
         global l
@@ -898,53 +948,67 @@ def sterg2():
         lx.clear()
         ly.clear()
         l.clear()
-        q1.delete("txt")
-        ff = float(f_e.get())
-        w = float(w_e.get())
-        p = float(p_e.get())
-        e = float(e_e.get())
-        s = float(s_e.get())
-        ll = float(l_e.get())
-        mm = float(m_e.get())
-        time = float(time_e.get())
-        ny = float(ny_e.get())
-        a = float(a_e.get())
-        a = a / 2
-        h = float(h_e.get())
-        ss = r_var.get()
-        lx = list(np.linspace(0, ll, 1000))
+        e, j, p_nagruzka, upr_koef, w, p, s, len_sterg, time = get_values(E_e,
+                                                                          J_e, P_e, n_e, w_e, p_e, s_e, l_e, time_e)
+
+        #####
+
+        # j = float(J_e.get())
+        # e = float(E_e.get())
+        # p_nagruzka = float(P_e.get())
+        # w = float(w_e.get())
+        # p = float(p_e.get())
+        # s = float(s_e.get())
+        # len_sterg = float(l_e.get())
+        # upr_koef = float(n_e.get())
+        # time = float(time_e.get())
+        #####
+        #####
+        # ny = float(ny_e.get())
+        # a = float(a_e.get())
+        # a = a / 2
+        # h = float(h_e.get())
+        #####
+        radiobutton_value = r_var.get()
+        lx = list(np.linspace(0, len_sterg, 1000))
         ly = np.zeros(1000)
         cheek = 0
-        ####заполнение таблицы
-        shag = 0.00001
-        y = 80
-        for i in range(1, 11, 1):
-            mi = i
-            x = 110
-            xx = shag
-            if ss == 0:
-                sc = True
-            else:
-                sc = False
-            while len(l) < 6:
-                if f(xx) * f(xx + shag) < 0:
-                    if sc == True:
-                        v = find(0.0001, xx, xx + shag / 2, xx + shag)
-                        v = float("{0:.5f}".format(v))
-                        q1.create_text(x, y, text=str(v), font="Arial 10", tag="txt")
-                        x += 70
-                        sc = False
-                    else:
-                        sc = True
-                xx += shag
-            y += 33
+        ##заполнение таблицы
+        compute_table(radiobutton_value, q1, len_sterg, e, j)
         ######################
-        if ss == 0:
+        # region условия радиокнопки определяющие тип граничных условий
+        if radiobutton_value == 0:
             try:
-                zn = (w * s * m.sqrt(e * p) * m.cos(w * ll * m.sqrt(p / e))) - (
-                        w * w * mm * m.sin(w * ll * m.sqrt(p / e)))
+                pass
+            # zn = (w * s * math.sqrt(e * p) * math.cos(w * len_sterg * math.sqrt(p / e))) - (
+            #         w * w * upr_koef * math.sin(w * len_sterg * math.sqrt(p / e)))
+            # for i in range(len(lx)):
+            #     ch = j * math.sin(w * lx[i] * math.sqrt(p / e))
+            #     ly[i] = ch / zn
+            # # анимация
+            # if r_var1.get() == 1:
+            #     lyy = ly
+            #
+            ly = ly * cm.exp(time * w * complex(0, -1))
+            ly = ly.real
+            except ValueError:
+                mbox.showerror("Ошибка", "Отрицательное число под корнем")
+                cheek += 1
+            except ZeroDivisionError:
+                mbox.showerror("Ошибка", "Происходит деление на ноль")
+                cheek += 1
+
+        elif radiobutton_value == 1:
+            try:
+                ct = math.cos(h * w * math.sqrt(p * (e / (2 * (1 - ny))) / ((1 - 2 * ny) / (2 - 2 * ny)))) / math.sin(
+                    h * w * math.sqrt(p * (e / (2 * (1 - ny))) / ((1 - 2 * ny) / (2 - 2 * ny))))
+                q = 2 * w * a * math.sqrt(p * (e / (2 * (1 - ny))) / ((1 - 2 * ny) / (2 - 2 * ny))) * ct
+                sig = math.sqrt(p / e)
+                zn = e * w * sig * (q - w * w * upr_koef) * math.cos(w * sig * len_sterg) - w * w * (
+                        upr_koef * q + e * e * sig * sig) * math.sin(
+                    w * sig * len_sterg)
                 for i in range(len(lx)):
-                    ch = ff * m.sin(w * lx[i] * m.sqrt(p / e))
+                    ch = j * (e * w * sig * math.cos(w * sig * lx[i]) + q * math.sin(w * sig * lx[i]))
                     ly[i] = ch / zn
                 # анимация
                 if r_var1.get() == 1:
@@ -958,36 +1022,15 @@ def sterg2():
             except ZeroDivisionError:
                 mbox.showerror("Ошибка", "Происходит деление на ноль")
                 cheek += 1
-
-        else:
-            try:
-                ct = m.cos(h * w * m.sqrt(p * (e / (2 * (1 - ny))) / ((1 - 2 * ny) / (2 - 2 * ny)))) / m.sin(
-                    h * w * m.sqrt(p * (e / (2 * (1 - ny))) / ((1 - 2 * ny) / (2 - 2 * ny))))
-                q = 2 * w * a * m.sqrt(p * (e / (2 * (1 - ny))) / ((1 - 2 * ny) / (2 - 2 * ny))) * ct
-                sig = m.sqrt(p / e)
-                zn = e * w * sig * (q - w * w * mm) * m.cos(w * sig * ll) - w * w * (
-                        mm * q + e * e * sig * sig) * m.sin(
-                    w * sig * ll)
-                for i in range(len(lx)):
-                    ch = ff * (e * w * sig * m.cos(w * sig * lx[i]) + q * m.sin(w * sig * lx[i]))
-                    ly[i] = ch / zn
-                # анимация
-                if r_var1.get() == 1:
-                    lyy = ly
-
-                ly = ly * cm.exp(time * w * complex(0, -1))
-                ly = ly.real
-            except ValueError:
-                mbox.showerror("Ошибка", "Отрицательное число под корнем")
-                cheek += 1
-            except ZeroDivisionError:
-                mbox.showerror("Ошибка", "Происходит деление на ноль")
-                cheek += 1
-
-        # отрисовка графика
+        elif radiobutton_value == 1:
+            pass
+        elif radiobutton_value == 2:
+            pass
+        # endregion
+        # region отрисовка графика
         if cheek == 0:
             if r_var1.get() == 0:  # без анимации
-                if ss == 0:
+                if radiobutton_value == 0:
                     fig = plt.figure("Стержень закреплён жёстко.")
                     plt.title("Стержень закреплён жёстко.\nГрафик отклонения стержня.".format(time))
                 else:
@@ -998,12 +1041,12 @@ def sterg2():
 
                 plt.xlabel("Координаты стержня")
                 plt.ylabel("Отклонение стержня")
-                plt.plot(lx, ly, label="{}-я секунда m={}".format(time, mm))
+                plt.plot(lx, ly, label="{}-я секунда m={}".format(time, upr_koef))
                 plt.grid(True)
                 plt.legend()
             else:  # с анимацией
                 gridsize = (1, 2)
-                if ss == 0:
+                if radiobutton_value == 0:
                     fig = plt.figure("Стержень закреплён жёстко", figsize=(11, 5))
                 else:
                     fig = plt.figure("Стержень закреплён не жёстко",
@@ -1021,23 +1064,24 @@ def sterg2():
                     ly2 = lyy * cm.exp(timer * w * complex(0, -1))
                     ly2 = ly2.real
                     pl = plt.plot(lx, ly2, color="red")
-                    plt.legend(pl, ["{}-я секунда m={}".format(timer, mm)])
+                    plt.legend(pl, ["{}-я секунда m={}".format(timer, upr_koef)])
                     camera.snap()
 
                 ax1 = plt.subplot2grid(gridsize, (0, 0))
-                if ss == 0:
+                if radiobutton_value == 0:
                     plt.title("Стержень закреплён жёстко\nграфик отклонения стержня".format(time))
                 else:
                     plt.title("Стержень закреплён не жёстко\nграфик отклонения стержня".format(time))
                 plt.xlabel("Координаты стержня")
                 plt.ylabel("Отклонение стержня")
-                plt.plot(lx, ly, label="{}-я секунда m={}".format(time, mm), color="blue")
+                plt.plot(lx, ly, label="{}-я секунда m={}".format(time, upr_koef), color="blue")
                 plt.grid(True)
                 plt.legend()
                 anim = camera.animate()
 
                 date = dt.datetime.now().strftime("%d-%m-%Y-%H.%M.%S")
                 anim.save("C:/Users/dimon/Pycharm/код/анимация/{}.gif".format(date), writer='imagemagick')
+        # endregion
         plt.show()
 
     ###отрисовка интерфеса данного окна
@@ -1071,78 +1115,101 @@ def sterg2():
     l1.grid(row=8, column=0, columnspan=8, sticky=W)
     l2 = Label(root2, text="Граничные условия:", font="Arial 15")
     l2.grid(row=0, column=10, columnspan=3, sticky=W)
-    l3 = Label(root2, text="Дополнительные данные:", font="Arial 15")
-    l3.grid(row=4, column=10, columnspan=3, sticky=SW)
 
-    e_l = Label(root2, text="E=")
-    f_l = Label(root2, text="F=")
-    m_l = Label(root2, text="m=")
+    #####
+    # l3 = Label(root2, text="Дополнительные данные:", font="Arial 15")
+    # l3.grid(row=4, column=10, columnspan=3, sticky=SW)
+    #####
+
+    E_l = Label(root2, text="E=")
+    J_l = Label(root2, text="J=")
+    P_l = Label(root2, text="P=")
+    n_l = Label(root2, text="n=")
     w_l = Label(root2, text="w=")
     t_l = Label(root2, text="точность=")
     p_l = Label(root2, text="p=")
     s_l = Label(root2, text="s=")
     l_l = Label(root2, text="l=")
     time_l = Label(root2, text="время=")
+
+    ##########
     ny_l = Label(root2, text="Коэф. Пуассона=")
     h_l = Label(root2, text="Ширина упругой полосы=")
     a_l = Label(root2, text="Ширина стержня=")
+    ##########
 
-    e_l.grid(row=9, column=0, sticky=W)
-    f_l.grid(row=10, column=0, sticky=W)
-    m_l.grid(row=11, column=0, sticky=W)
-    w_l.grid(row=12, column=0, sticky=W)
+    E_l.grid(row=9, column=0, sticky=W)
+    J_l.grid(row=10, column=0, sticky=W)
+    P_l.grid(row=11, column=0, sticky=W)
+    n_l.grid(row=12, column=0, sticky=W)
+    w_l.grid(row=13, column=0, sticky=W)
 
     p_l.grid(row=9, column=4, sticky=W)
     s_l.grid(row=10, column=4, sticky=W)
     l_l.grid(row=11, column=4, sticky=W)
     time_l.grid(row=12, column=4, sticky=W)
-    ny_l.grid(row=5, column=10, sticky=NW)
-    h_l.grid(row=6, column=10, sticky=NW)
-    a_l.grid(row=7, column=10, sticky=NW)
+    # ny_l.grid(row=5, column=10, sticky=NW)
+    # h_l.grid(row=6, column=10, sticky=NW)
+    # a_l.grid(row=7, column=10, sticky=NW)
 
     # Entry
-    e_e = Entry(root2)
-    f_e = Entry(root2)
-    m_e = Entry(root2)
+    E_e = Entry(root2)
+    J_e = Entry(root2)
+    P_e = Entry(root2)
+    n_e = Entry(root2)
     w_e = Entry(root2)
 
     p_e = Entry(root2)
     s_e = Entry(root2)
     l_e = Entry(root2)
     time_e = Entry(root2)
+
+    #####
     ny_e = Entry(root2, width=15)
     h_e = Entry(root2, width=15)
     a_e = Entry(root2, width=15)
+    #####
 
-    e_e.grid(row=9, column=1, columnspan=2)
-    f_e.grid(row=10, column=1, columnspan=2)
-    m_e.grid(row=11, column=1, columnspan=2)
-    w_e.grid(row=12, column=1, columnspan=2)
+    E_e.grid(row=9, column=1, columnspan=2)
+    J_e.grid(row=10, column=1, columnspan=2)
+    P_e.grid(row=11, column=1, columnspan=2)
+    n_e.grid(row=12, column=1, columnspan=2)
+    w_e.grid(row=13, column=1, columnspan=2)
+
     p_e.grid(row=9, column=5, columnspan=2)
     s_e.grid(row=10, column=5, columnspan=2)
     l_e.grid(row=11, column=5, columnspan=2)
     time_e.grid(row=12, column=5, columnspan=2)
-    ny_e.grid(row=5, column=11, sticky=NW)
-    h_e.grid(row=6, column=11, sticky=NW)
-    a_e.grid(row=7, column=11, sticky=NW)
+
+    # ny_e.grid(row=5, column=11, sticky=NW)
+    # h_e.grid(row=6, column=11, sticky=NW)
+    # a_e.grid(row=7, column=11, sticky=NW)
 
     # Button
     b1 = Button(root2, text="Рассчитать", bg="orange", command=tableSterg)
     b1.grid(row=13, column=11)
+
     b2 = Button(root2, text="Очистить", bd=0, command=clean)
     b2.grid(row=13, column=10)
+
+    b3 = Button(root2, text="Расчитать собственные частоты",
+                command=lambda: compute_table(int(r_var.get()), q1, float(l_e.get()), float(E_e.get()),
+                                              float(J_e.get())))
+    b3.grid(row=12, column=10)
 
     # Radiobutton
     r_var = IntVar()
     r_var.set(0)
-    r_1 = Radiobutton(root2, text="Стержень закреплён жёстко", variable=r_var, value=0)
-    r_2 = Radiobutton(root2,
-                      text="Стержень без трения контактирует с\nполуограниченным деформируемым\nоснованием средой"
-                           "\n(Необходимы дополнительные данные)",
-                      variable=r_var, value=1)
+    r_1 = Radiobutton(root2, text="Защемлённый стержень", variable=r_var, value=0)
+    r_2 = Radiobutton(root2, text="Шарнирно-опёртый стержень", variable=r_var, value=1)
+    r_3 = Radiobutton(root2, text="Шарнирно-опёртый стержень на \nупругой опоре (абсолютно жёсткие опоры)",
+                      variable=r_var, value=2)
+    r_4 = Radiobutton(root2, text="Шарнирно-опёртый стержень на \nупругой опоре (абсолютно податливые опоры)",
+                      variable=r_var, value=3)
     r_1.grid(row=1, column=10, columnspan=3, sticky=W)
     r_2.grid(row=2, column=10, columnspan=3, sticky=W)
-
+    r_3.grid(row=3, column=10, columnspan=3, sticky=W)
+    r_4.grid(row=4, column=10, columnspan=3, sticky=W)
     # checkbutton
     r_var1 = IntVar()
     r_var1.set(0)

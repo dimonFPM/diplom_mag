@@ -1,32 +1,43 @@
-import numpy as np
+import tkinter as tk
 
-a = 1
 
-xx = np.arange(0, 100.001, 0.001)
+class Label_entry():
+    def __init__(self, root_frame, name):
+        self.__f = tk.Frame(root_frame)
+        self.__e = tk.Entry(self.__f)
+        # self.__e.insert(0, "22")
+        self.__l = tk.Label(self.__f, text=name)
+        self.__pack()
 
-yy_cos = np.copy(xx)
-yy_ch = np.copy(xx)
+    def __pack(self):
+        self.__l.pack(side=tk.LEFT)
+        self.__e.pack(side=tk.LEFT)
+        self.__f.pack(side=tk.TOP)
 
-yy_cos = yy_cos * a
-yy_cos = np.cos(yy_cos)
+    def get(self):
+        return self.__e.get()
 
-yy_ch = yy_ch * a
-yy_ch = np.cosh(yy_ch)
-yy_ch = 1 / yy_ch
+    def set(self, x):
+        self.__e.delete(0, tk.END)
+        self.__e.insert(0, x)
+    def __ff(self):
+        print("жопа")
 
-# print(yy_cos[:10])
-# print(yy_ch[:10])
-col = 0
-for i in range(len(yy_cos)):
-    # if -0.001 < yy_cos[i] < 0.001:
-    if yy_cos[i] ==0:
-        col += 1
-        print(yy_cos[i])
-print(col)
+class Label_entry_blok():
+    pass
+def f1():
+    print(chislo.get())
 
-import matplotlib.pyplot as plt
 
-fig = plt.Figure()
-plt.plot(xx, yy_ch)
-plt.plot(xx, yy_cos)
-plt.show()
+root_win = tk.Tk()
+b = tk.Button(root_win, text="кнопка!!!", command=f1)
+b.pack(side=tk.TOP)
+frame = tk.Frame(root_win)
+frame.pack(side=tk.TOP)
+
+chislo = Label_entry(frame, "chislo")
+chislo2 = Label_entry(frame, "chislo2")
+chislo3 = Label_entry(root_win, "chislo3")
+
+print(chislo.get())
+root_win.mainloop()
