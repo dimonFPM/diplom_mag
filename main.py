@@ -989,8 +989,10 @@ def sterg2():
             # if r_var1.get() == 1:
             #     lyy = ly
             #
-            ly = ly * cm.exp(time * w * complex(0, -1))
-            ly = ly.real
+
+
+            # ly = ly * cm.exp(time * w * complex(0, -1))
+            # ly = ly.real
             except ValueError:
                 mbox.showerror("Ошибка", "Отрицательное число под корнем")
                 cheek += 1
