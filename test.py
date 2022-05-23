@@ -20,8 +20,7 @@
 #     def set(self, x):
 #         self.__e.delete(0, tk.END)
 #         self.__e.insert(0, x)
-#     def __ff(self):
-#         print("жопа")
+#
 #
 # class Label_entry_blok():
 #     pass
@@ -41,5 +40,7 @@
 #
 # print(chislo.get())
 # root_win.mainloop()
-a = "dfdf{name} fdkjfdkf{r}{name}"
-print(a.format(name="dima", r=12))
+
+a = 2.2222222222222222222222
+a = float(f"{a:.2f}")
+print(a, type(a))
