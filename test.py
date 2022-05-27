@@ -40,7 +40,31 @@
 #
 # print(chislo.get())
 # root_win.mainloop()
+#
+# import threading
+#
+#
+# def f1(name):
+#     for i in range(25):
+#         print(f"\nя поток {name}, но не главный////{i}")
+#
+#
+#
+# name = "поток1"
+# th1 = threading.Thread(target=f1, name=name, args=(name,))
+# th1.start()
+# for i in range(100):
+#     print(f"\nя цикл, его {i} итерация")
+import matplotlib.pyplot as plt
 
-a = 2.2222222222222222222222
-a = float(f"{a:.2f}")
-print(a, type(a))
+x = [i for i in range(100)]
+y = [i ** 2 for i in x]
+y2 = [i ** 3 for i in x]
+fig = plt.figure("это")
+plt.title("кака")
+plt.subplot(121)
+plt.plot(x, y)
+plt.subplot(122)
+plt.plot(x, y2)
+
+plt.show()

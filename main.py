@@ -3,7 +3,7 @@ import datetime as dt
 import math as math
 from tkinter import *
 from tkinter import messagebox as mbox
-
+import classes.back.sterg_poperek as bspi
 import matplotlib.pyplot as plt
 import numpy as np
 from celluloid import Camera
@@ -828,11 +828,12 @@ def sterg2():
     root2 = Toplevel()
     root2.title("Моделирование поперечно-изгибных колебаний стержня")
     root2.geometry("700x560+310+20")
-    root2.resizable(False, False)
+
+    # root2.resizable(False, False)
 
     def clean():  # обработчик кнопки очистка
-        E_e.delete(0, END)
-        J_e.delete(0, END)
+        e_e.delete(0, END)
+        j_e.delete(0, END)
         P_e.delete(0, END)
         n_e.delete(0, END)
         w_e.delete(0, END)
@@ -841,9 +842,9 @@ def sterg2():
         l_e.delete(0, END)
         time_e.delete(0, END)
         #####
-        ny_e.delete(0, END)
+        c0_e.delete(0, END)
         a_e.delete(0, END)
-        h_e.delete(0, END)
+        cz_e.delete(0, END)
         #####
         r_var.set(0)
         q1.delete("txt")
@@ -852,13 +853,13 @@ def sterg2():
     #     ss = r_var.get()
     #     s = float(s_e.get())
     #     p = float(p_e.get())
-    #     e = float(E_e.get())
+    #     e = float(e_e.get())
     #     sig = math.sqrt(p / e)
     #     ll = float(l_e.get())
-    #     ny = float(ny_e.get())
+    #     ny = float(c0_e.get())
     #     a = float(a_e.get())
     #     a = a / 2
-    #     h = float(h_e.get())
+    #     h = float(cz_e.get())
     #     global mi
     #     if ss == 0 and math.tan(sig * x) != 0:
     #         return ((s * sig * e * ll) / (ll * math.tan(sig * x * ll))) - x * mi
@@ -893,106 +894,37 @@ def sterg2():
     #         x2 = xn
 
     #####################################################
-    def get_values(*names):
-        try:
-            value_list = [float(i.get()) for i in names if i.get() != ""]
-        except:
-            print("не число")
-            return None
-        if len(names) == len(value_list):
-            return value_list
-        else:
-            print("одно из полей не заполнено")
-            return None
-
-    def compute_frequency1(l, e, j, m, k):
-        return (((math.pi ** 2 * (1 / 4 + k + k ** 2)) / l ** 2) * math.sqrt(e * j / m))
-
-    def compute_frequency2(l, e, j, m, k):
-        return (((math.pi ** 2 * k ** 2) / l ** 2) * math.sqrt(e * j / m))
-
-    def compute_frequency3(l, e, j, m, k):
-        return (((math.pi ** 2 * k ** 2) / l ** 2) * math.sqrt(e * j / m))
-
-    def compute_frequency4(l, e, j, m, k):
-        return (((math.pi ** 2 * (1 / 4 + k + k ** 2)) / l ** 2) * math.sqrt(e * j / m))
-
-    def compute_table(radiobutton_value, canvas, l, e, j):
-        canvas.delete("txt")
-        y = 80
-        for m in range(1, 11):
-            x = 110
-            print(f"m={m}")
-            for k in range(1, 6):
-                if radiobutton_value == 0:
-                    res = compute_frequency1(l, e, j, m, k)
-                elif radiobutton_value == 1:
-                    res = compute_frequency2(l, e, j, m, k)
-                elif radiobutton_value == 2:
-                    res = compute_frequency3(l, e, j, m, k)
-                elif radiobutton_value == 3:
-                    res = compute_frequency4(l, e, j, m, k)
-                res = "%.4f" % res
-                q1.create_text(x, y, text=str(res), font="Arial 10", tag="txt")
-                x += 70
-                print(f"k={k}")
-            y += 33
 
     def tableSterg():
-        global l
-        global lx
-        global ly
-        global mi  ###################################
-        l = list(l)
-        ly = list(ly)
-        lx.clear()
-        ly.clear()
-        l.clear()
-        e, j, p_nagruzka, upr_koef, w, p, s, len_sterg, time = get_values(E_e,
-                                                                          J_e, P_e, n_e, w_e, p_e, s_e, l_e, time_e)
-
-        #####
-
-        # j = float(J_e.get())
-        # e = float(E_e.get())
-        # p_nagruzka = float(P_e.get())
-        # w = float(w_e.get())
-        # p = float(p_e.get())
-        # s = float(s_e.get())
-        # len_sterg = float(l_e.get())
-        # upr_koef = float(n_e.get())
-        # time = float(time_e.get())
-        #####
-        #####
-        # ny = float(ny_e.get())
-        # a = float(a_e.get())
-        # a = a / 2
-        # h = float(h_e.get())
-        #####
+        e, j, p_nagruzka, upr_koef, w, p, s, len_sterg, time, c0, cz = bspi.get_values(e_e,
+                                                                                       j_e, P_e, n_e, w_e, p_e, s_e,
+                                                                                       l_e,
+                                                                                       time_e, c0_e, cz_e)
         radiobutton_value = r_var.get()
-        lx = list(np.linspace(0, len_sterg, 1000))
-        ly = np.zeros(1000)
         cheek = 0
         ##заполнение таблицы
-        compute_table(radiobutton_value, q1, len_sterg, e, j)
+        bspi.table_writer(q1, bspi.compute_table(radiobutton_value, len_sterg, e, j))
         ######################
         # region условия радиокнопки определяющие тип граничных условий
         if radiobutton_value == 0:
             try:
-                pass
-            # zn = (w * s * math.sqrt(e * p) * math.cos(w * len_sterg * math.sqrt(p / e))) - (
-            #         w * w * upr_koef * math.sin(w * len_sterg * math.sqrt(p / e)))
-            # for i in range(len(lx)):
-            #     ch = j * math.sin(w * lx[i] * math.sqrt(p / e))
-            #     ly[i] = ch / zn
-            # # анимация
-            # if r_var1.get() == 1:
-            #     lyy = ly
+            # ct = math.cos(h * w * math.sqrt(p * (e / (2 * (1 - ny))) / ((1 - 2 * ny) / (2 - 2 * ny)))) / math.sin(
+            #         h * w * math.sqrt(p * (e / (2 * (1 - ny))) / ((1 - 2 * ny) / (2 - 2 * ny))))
+            #     q = 2 * w * a * math.sqrt(p * (e / (2 * (1 - ny))) / ((1 - 2 * ny) / (2 - 2 * ny))) * ct
+            #     sig = math.sqrt(p / e)
+            #     zn = e * w * sig * (q - w * w * upr_koef) * math.cos(w * sig * len_sterg) - w * w * (
+            #             upr_koef * q + e * e * sig * sig) * math.sin(
+            #         w * sig * len_sterg)
+            #     for i in range(len(lx)):
+            #         ch = j * (e * w * sig * math.cos(w * sig * lx[i]) + q * math.sin(w * sig * lx[i]))
+            #         ly[i] = ch / zn
+            #     # анимация
+            #     if r_var1.get() == 1:
+            #         lyy = ly
             #
-
-
-            # ly = ly * cm.exp(time * w * complex(0, -1))
-            # ly = ly.real
+            #     ly = ly * cm.exp(time * w * complex(0, -1))
+            #     ly = ly.real
+                pass
             except ValueError:
                 mbox.showerror("Ошибка", "Отрицательное число под корнем")
                 cheek += 1
@@ -1002,89 +934,26 @@ def sterg2():
 
         elif radiobutton_value == 1:
             try:
-                ct = math.cos(h * w * math.sqrt(p * (e / (2 * (1 - ny))) / ((1 - 2 * ny) / (2 - 2 * ny)))) / math.sin(
-                    h * w * math.sqrt(p * (e / (2 * (1 - ny))) / ((1 - 2 * ny) / (2 - 2 * ny))))
-                q = 2 * w * a * math.sqrt(p * (e / (2 * (1 - ny))) / ((1 - 2 * ny) / (2 - 2 * ny))) * ct
-                sig = math.sqrt(p / e)
-                zn = e * w * sig * (q - w * w * upr_koef) * math.cos(w * sig * len_sterg) - w * w * (
-                        upr_koef * q + e * e * sig * sig) * math.sin(
-                    w * sig * len_sterg)
-                for i in range(len(lx)):
-                    ch = j * (e * w * sig * math.cos(w * sig * lx[i]) + q * math.sin(w * sig * lx[i]))
-                    ly[i] = ch / zn
-                # анимация
-                if r_var1.get() == 1:
-                    lyy = ly
-
-                ly = ly * cm.exp(time * w * complex(0, -1))
-                ly = ly.real
+                # e, j, p_nagruzka, upr_koef, w, p, s, len_sterg, time
+                # print(p_nagruzka, bspi.compute_s(0.12,0.1), w, e, bspi.compute_j(0.12,0.1), c0, cz, len_sterg)
+                lx, ly = bspi.u_list(p, bspi.compute_s(0.12, 0.1), w, e, bspi.compute_j(0.12, 0.1), c0, cz, len_sterg)
+                if None in (lx, ly):
+                    raise ZeroDivisionError
             except ValueError:
                 mbox.showerror("Ошибка", "Отрицательное число под корнем")
                 cheek += 1
             except ZeroDivisionError:
                 mbox.showerror("Ошибка", "Происходит деление на ноль")
                 cheek += 1
-        elif radiobutton_value == 1:
-            pass
+
         elif radiobutton_value == 2:
             pass
+        elif radiobutton_value == 3:
+            pass
         # endregion
-        # region отрисовка графика
-        if cheek == 0:
-            if r_var1.get() == 0:  # без анимации
-                if radiobutton_value == 0:
-                    fig = plt.figure("Стержень закреплён жёстко.")
-                    plt.title("Стержень закреплён жёстко.\nГрафик отклонения стержня.".format(time))
-                else:
-                    fig = plt.figure(
-                        "Стержень закреплён не жёстко.")
-                    plt.title("Стержень закреплён не жёстко.\nГрафик отклонения стержня.".format(
-                        time))
 
-                plt.xlabel("Координаты стержня")
-                plt.ylabel("Отклонение стержня")
-                plt.plot(lx, ly, label="{}-я секунда m={}".format(time, upr_koef))
-                plt.grid(True)
-                plt.legend()
-            else:  # с анимацией
-                gridsize = (1, 2)
-                if radiobutton_value == 0:
-                    fig = plt.figure("Стержень закреплён жёстко", figsize=(11, 5))
-                else:
-                    fig = plt.figure("Стержень закреплён не жёстко",
-                                     figsize=(11, 5))
-                camera = Camera(fig)
-
-                ax2 = plt.subplot2grid(gridsize, (0, 1))
-                plt.title("Изменение отклонения со временем")
-                plt.grid(True)
-                plt.xlabel("Координаты стержня")
-                plt.ylabel("Отклонение стержня")
-
-                ttt = np.arange(0, 50, 0.5)
-                for timer in ttt:
-                    ly2 = lyy * cm.exp(timer * w * complex(0, -1))
-                    ly2 = ly2.real
-                    pl = plt.plot(lx, ly2, color="red")
-                    plt.legend(pl, ["{}-я секунда m={}".format(timer, upr_koef)])
-                    camera.snap()
-
-                ax1 = plt.subplot2grid(gridsize, (0, 0))
-                if radiobutton_value == 0:
-                    plt.title("Стержень закреплён жёстко\nграфик отклонения стержня".format(time))
-                else:
-                    plt.title("Стержень закреплён не жёстко\nграфик отклонения стержня".format(time))
-                plt.xlabel("Координаты стержня")
-                plt.ylabel("Отклонение стержня")
-                plt.plot(lx, ly, label="{}-я секунда m={}".format(time, upr_koef), color="blue")
-                plt.grid(True)
-                plt.legend()
-                anim = camera.animate()
-
-                date = dt.datetime.now().strftime("%d-%m-%Y-%H.%M.%S")
-                anim.save("C:/Users/dimon/Pycharm/код/анимация/{}.gif".format(date), writer='imagemagick')
-        # endregion
-        plt.show()
+        if cheek == 0:  # отрисовка графика
+            bspi.pain_grath(r_var1.get(), lx, ly, w, upr_koef, time)
 
     ###отрисовка интерфеса данного окна
     q1 = Canvas(root2, width=430, height=400, bg="white")
@@ -1119,8 +988,8 @@ def sterg2():
     l2.grid(row=0, column=10, columnspan=3, sticky=W)
 
     #####
-    # l3 = Label(root2, text="Дополнительные данные:", font="Arial 15")
-    # l3.grid(row=4, column=10, columnspan=3, sticky=SW)
+    l3 = Label(root2, text="Дополнительные данные:", font="Arial 15")
+    l3.grid(row=5, column=10, columnspan=3, sticky=SW)
     #####
 
     E_l = Label(root2, text="E=")
@@ -1135,8 +1004,8 @@ def sterg2():
     time_l = Label(root2, text="время=")
 
     ##########
-    ny_l = Label(root2, text="Коэф. Пуассона=")
-    h_l = Label(root2, text="Ширина упругой полосы=")
+    c0_l = Label(root2, text="C0=")
+    cz_l = Label(root2, text="CZ=")
     a_l = Label(root2, text="Ширина стержня=")
     ##########
 
@@ -1150,13 +1019,15 @@ def sterg2():
     s_l.grid(row=10, column=4, sticky=W)
     l_l.grid(row=11, column=4, sticky=W)
     time_l.grid(row=12, column=4, sticky=W)
-    # ny_l.grid(row=5, column=10, sticky=NW)
-    # h_l.grid(row=6, column=10, sticky=NW)
+
+    c0_l.grid(row=6, column=10, sticky=NW)
+    cz_l.grid(row=7, column=10, sticky=NW)
     # a_l.grid(row=7, column=10, sticky=NW)
 
     # Entry
-    E_e = Entry(root2)
-    J_e = Entry(root2)
+
+    e_e = Entry(root2)
+    j_e = Entry(root2)
     P_e = Entry(root2)
     n_e = Entry(root2)
     w_e = Entry(root2)
@@ -1167,13 +1038,22 @@ def sterg2():
     time_e = Entry(root2)
 
     #####
-    ny_e = Entry(root2, width=15)
-    h_e = Entry(root2, width=15)
+    c0_e = Entry(root2, width=15)
+    cz_e = Entry(root2, width=15)
     a_e = Entry(root2, width=15)
     #####
-
-    E_e.grid(row=9, column=1, columnspan=2)
-    J_e.grid(row=10, column=1, columnspan=2)
+    ######
+    p_e.insert(0, 7800)
+    # s_e.insert(0, 4)
+    w_e.insert(0, 5)
+    e_e.insert(0, 0.89)
+    # j_e.insert(0, 5)
+    c0_e.insert(0, 0.2 * 10 ** 3)
+    cz_e.insert(0, 1 * 10 ** 6)
+    l_e.insert(0, 1)
+    ######
+    e_e.grid(row=9, column=1, columnspan=2)
+    j_e.grid(row=10, column=1, columnspan=2)
     P_e.grid(row=11, column=1, columnspan=2)
     n_e.grid(row=12, column=1, columnspan=2)
     w_e.grid(row=13, column=1, columnspan=2)
@@ -1183,8 +1063,8 @@ def sterg2():
     l_e.grid(row=11, column=5, columnspan=2)
     time_e.grid(row=12, column=5, columnspan=2)
 
-    # ny_e.grid(row=5, column=11, sticky=NW)
-    # h_e.grid(row=6, column=11, sticky=NW)
+    c0_e.grid(row=6, column=11, sticky=NW)
+    cz_e.grid(row=7, column=11, sticky=NW)
     # a_e.grid(row=7, column=11, sticky=NW)
 
     # Button
@@ -1194,10 +1074,11 @@ def sterg2():
     b2 = Button(root2, text="Очистить", bd=0, command=clean)
     b2.grid(row=13, column=10)
 
-    b3 = Button(root2, text="Расчитать собственные частоты",
-                command=lambda: compute_table(int(r_var.get()), q1, float(l_e.get()), float(E_e.get()),
-                                              float(J_e.get())))
-    b3.grid(row=12, column=10)
+    b3 = Button(root2, text="Расчитать собственные частоты", width=27,
+                command=lambda: bspi.table_writer(q1, bspi.compute_table(int(r_var.get()), float(l_e.get()),
+                                                                         float(e_e.get()), float(j_e.get()))))
+
+    b3.grid(row=12, column=10, columnspan=2)
 
     # Radiobutton
     r_var = IntVar()
