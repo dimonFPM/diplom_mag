@@ -4,7 +4,7 @@ import datetime as dt
 import math
 import time
 import cmath as cm
-import numba
+# import numba
 import numpy as np
 import matplotlib.pyplot as plt
 from celluloid import Camera
@@ -245,49 +245,57 @@ def pain_grath(animate_check, lx, ly, w, upr_koef, time):
 def compute_sigma(p, e):
     if e:  # если е ноль, то возникает деление на ноль
         return math.sqrt(p / e)
+
     else:
         return None
 
 
-def compute_frequency_for_prodol_sterg1(x, s, p, e, len_sterg, sig, massa):
-    tangens = math.tan(sig * x)
-    if not tangens:  # вознекнет деление на ноль
+def compute_frequency_for_prodol_sterg1(x, s, e, len_sterg, sig, massa):
+    tangens = math.tan(sig * x * len_sterg)
+    zn = len_sterg * tangens
+    if not zn:  # вознекнет деление на ноль
         raise ZeroDivisionError
-    return ((s * sig * e * len_sterg) / (len_sterg * math.tan(sig * x * len_sterg))) - x * massa
+    return ((s * sig * e * len_sterg) / zn) - x * massa
 
 
-def find_zero(x0, x1, sig, count_zeros, s, e, len_sterg, massa, eps=0.0001):
+def find_zero(x0, x1, sig, s, e, len_sterg, massa, eps=0.0001):
     f_x0 = compute_frequency_for_prodol_sterg1(x0, s, e, len_sterg, sig, massa)
     f_x1 = compute_frequency_for_prodol_sterg1(x1, s, e, len_sterg, sig, massa)
     if f_x0 * f_x1 < 0:
+        if f_x0 == 0:
+            return x0
+        elif f_x1 == 0:
+            return x1
         if x1 - x0 <= eps:
             return x1 - eps / 2
         else:
-            if x0 * x_polovina < 0:
+            x_polovina = x0 + (x1 - x0) / 2
+            res1 = find_zero(x0, x_polovina, sig, s, e, len_sterg, massa)
+            res2 = find_zero(x_polovina, x1, sig, s, e, len_sterg, massa)
+            if res1 is not None and res2 is None:
+                return res1
+            elif res1 is None and res2 is not None:
+                return res2
+            elif res1 == res2 != None:
+                return res1
+    else:
+        return None
 
-            elif x_polovina * x1 < 0:
-                pass
 
-    x0 = x1
-    x1 = x0 + shag
-    x_polovina = x0 + shag / 2
-    # if len(res_list)==count_zeros:
-    #     pass
-
-
-def compute_table_for_prodol_sterg(p, e, len_sterg, sig, masssa, shag=0.01):
+def compute_table_for_prodol_sterg(p, e, s, len_sterg, shag=0.01):
     sig = compute_sigma(p, e)
-    x = 0
     if not sig:
         raise ZeroDivisionError
     res_list = []
     for m in range(1, 11):
+        x = 0.00001
         res_list.append([])
         while len(res_list[-1]) < 5:
-            res = find_zero()
+            res = find_zero(x, x + shag, sig, s, e, len_sterg, m)
             if res is not None:
                 res_list[-1].append(res)
             x += shag
+    return res_list
 
 
 def compute_frequency_for_prodol_sterg2():
@@ -297,12 +305,13 @@ def compute_frequency_for_prodol_sterg2():
 # endregion
 
 if __name__ == '__main__':
-    s = compute_s(0.12, 0.1)
-    j = compute_j(0.12, 0.1)
-    t = datetime.datetime.now
-    #              x, p,    s,                 w, e,    j, c0, cz,         len_sterg
-    # print("res=", u_list(7800, s, 5, 0.89, j, 0.2 * 10 ** 3, 1 * 10 ** 6, 1))
-    lx, ly = u_list_1(1, compute_s(0.12, 0.1), 1, 1, compute_j(0.12, 0.1), 1, 1, 1)
-    pain_grath(0, lx, ly, 1, 1, 1)
-    print(datetime.datetime.now() - t)
-    pass
+    print(*compute_table_for_prodol_sterg(7, 0.5, 0.5, 0.5), sep="\n")
+    # s = compute_s(0.12, 0.1)
+    # j = compute_j(0.12, 0.1)
+    # t = datetime.datetime.now
+    # #              x, p,    s,                 w, e,    j, c0, cz,         len_sterg
+    # # print("res=", u_list(7800, s, 5, 0.89, j, 0.2 * 10 ** 3, 1 * 10 ** 6, 1))
+    # lx, ly = u_list_1(1, compute_s(0.12, 0.1), 1, 1, compute_j(0.12, 0.1), 1, 1, 1)
+    # pain_grath(0, lx, ly, 1, 1, 1)
+    # print(datetime.datetime.now() - t)
+    # pass
