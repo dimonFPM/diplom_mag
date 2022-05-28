@@ -849,110 +849,41 @@ def sterg2():
         r_var.set(0)
         q1.delete("txt")
 
-    # def f(x):
-    #     ss = r_var.get()
-    #     s = float(s_e.get())
-    #     p = float(p_e.get())
-    #     e = float(e_e.get())
-    #     sig = math.sqrt(p / e)
-    #     ll = float(l_e.get())
-    #     ny = float(c0_e.get())
-    #     a = float(a_e.get())
-    #     a = a / 2
-    #     h = float(cz_e.get())
-    #     global mi
-    #     if ss == 0 and math.tan(sig * x) != 0:
-    #         return ((s * sig * e * ll) / (ll * math.tan(sig * x * ll))) - x * mi
-    #     elif ss == 1:
-    #         q = 2 * x * a * math.sqrt(p * ny / e) * (
-    #                 math.cos(2 * h * x * math.sqrt(p * ny / e)) / math.sin(2 * h * x * math.sqrt(p * ny / e)))
-    #         return e * x * sig * (q - x * x * mi) * math.cos(x * sig * ll) - x * x * (
-    #                 mi * q + e * e * sig) * math.sin(
-    #             x * sig * ll)
-    #
-    # def v2(x, y):
-    #     s = (f(y) - f(x)) / (y - x)
-    #     return s
-    #
-    # def v3(y0, y1, y2):
-    #     s = (v2(y1, y2) - v2(y0, y1)) / (y2 - y0)
-    #     return s
-    #
-    # def find(eps, x0, x1, x2):
-    #     s = f(x0)
-    #     s1 = f(x2)
-    #     while True:
-    #         w = v2(x1, x2) + (x2 - x1) * v3(x0, x1, x2)
-    #         if s > s1:
-    #             xn = x2 - (2 * f(x2)) / (w - math.sqrt(w * w - 4 * f(x2) * v3(x0, x1, x2)))
-    #         elif s < s1:
-    #             xn = x2 - (2 * f(x2)) / (w + math.sqrt(w * w - 4 * f(x2) * v3(x0, x1, x2)))
-    #         if (abs(xn - x2) < eps) and (f(xn) < eps):
-    #             return xn
-    #         x0 = x1
-    #         x1 = x2
-    #         x2 = xn
-
-    #####################################################
-
     def tableSterg():
         e, j, p_nagruzka, upr_koef, w, p, s, len_sterg, time, c0, cz = bspi.get_values(e_e,
                                                                                        j_e, P_e, n_e, w_e, p_e, s_e,
                                                                                        l_e,
                                                                                        time_e, c0_e, cz_e)
         radiobutton_value = r_var.get()
-        cheek = 0
+        error_cheek = 0
         ##заполнение таблицы
         bspi.table_writer(q1, bspi.compute_table(radiobutton_value, len_sterg, e, j))
         ######################
         # region условия радиокнопки определяющие тип граничных условий
-        if radiobutton_value == 0:
-            try:
-            # ct = math.cos(h * w * math.sqrt(p * (e / (2 * (1 - ny))) / ((1 - 2 * ny) / (2 - 2 * ny)))) / math.sin(
-            #         h * w * math.sqrt(p * (e / (2 * (1 - ny))) / ((1 - 2 * ny) / (2 - 2 * ny))))
-            #     q = 2 * w * a * math.sqrt(p * (e / (2 * (1 - ny))) / ((1 - 2 * ny) / (2 - 2 * ny))) * ct
-            #     sig = math.sqrt(p / e)
-            #     zn = e * w * sig * (q - w * w * upr_koef) * math.cos(w * sig * len_sterg) - w * w * (
-            #             upr_koef * q + e * e * sig * sig) * math.sin(
-            #         w * sig * len_sterg)
-            #     for i in range(len(lx)):
-            #         ch = j * (e * w * sig * math.cos(w * sig * lx[i]) + q * math.sin(w * sig * lx[i]))
-            #         ly[i] = ch / zn
-            #     # анимация
-            #     if r_var1.get() == 1:
-            #         lyy = ly
-            #
-            #     ly = ly * cm.exp(time * w * complex(0, -1))
-            #     ly = ly.real
-                pass
-            except ValueError:
-                mbox.showerror("Ошибка", "Отрицательное число под корнем")
-                cheek += 1
-            except ZeroDivisionError:
-                mbox.showerror("Ошибка", "Происходит деление на ноль")
-                cheek += 1
+        try:
+            if radiobutton_value == 0:
+                pass  # место для функции вычисления изгибов при данных  граничных условиях
+            elif radiobutton_value == 1:
+                lx, ly = bspi.u_list_1(p, bspi.compute_s(0.12, 0.1), w, e, bspi.compute_j(0.12, 0.1), c0, cz, len_sterg)
+            elif radiobutton_value == 2:
+                lx, ly = bspi.u_list_2(p, bspi.compute_s(0.12, 0.1), w, e, bspi.compute_j(0.12, 0.1), c0, len_sterg)
+            elif radiobutton_value == 3:
+                lx, ly = bspi.u_list_3(p, bspi.compute_s(0.12, 0.1), w, e, bspi.compute_j(0.12, 0.1), c0, len_sterg)
 
-        elif radiobutton_value == 1:
-            try:
-                # e, j, p_nagruzka, upr_koef, w, p, s, len_sterg, time
-                # print(p_nagruzka, bspi.compute_s(0.12,0.1), w, e, bspi.compute_j(0.12,0.1), c0, cz, len_sterg)
-                lx, ly = bspi.u_list(p, bspi.compute_s(0.12, 0.1), w, e, bspi.compute_j(0.12, 0.1), c0, cz, len_sterg)
-                if None in (lx, ly):
-                    raise ZeroDivisionError
-            except ValueError:
-                mbox.showerror("Ошибка", "Отрицательное число под корнем")
-                cheek += 1
-            except ZeroDivisionError:
-                mbox.showerror("Ошибка", "Происходит деление на ноль")
-                cheek += 1
-
-        elif radiobutton_value == 2:
-            pass
-        elif radiobutton_value == 3:
-            pass
+            if None in (lx, ly):
+                raise ZeroDivisionError
+        except ValueError:
+            mbox.showerror("Ошибка", "Отрицательное число под корнем")
+            error_cheek += 1
+        except ZeroDivisionError:
+            mbox.showerror("Ошибка", "Происходит деление на ноль")
+            error_cheek += 1
+        except:
+            mbox.showerror("Ошибка", "Неизвстная ошибка при вычислении")
+            error_cheek += 1
         # endregion
 
-        if cheek == 0:  # отрисовка графика
+        if error_cheek == 0:  # отрисовка графика
             bspi.pain_grath(r_var1.get(), lx, ly, w, upr_koef, time)
 
     ###отрисовка интерфеса данного окна
