@@ -1,15 +1,19 @@
 import cmath as cm
 import datetime as dt
 import math as math
+import tkinter
 from tkinter import *
 from tkinter import messagebox as mbox
+
+from fontTools.ttLib.tables._k_e_r_n import table__k_e_r_n
+
 import classes.back.sterg_poperek as bspi
 import matplotlib.pyplot as plt
 import numpy as np
 from celluloid import Camera
 
 root = Tk()
-root.title("Стержень")
+root.title("Моделирование")
 root.geometry("270x100+100+100")
 root.resizable(False, False)
 
@@ -827,18 +831,19 @@ def sterg():
 def sterg2():
     root2 = Toplevel()
     root2.title("Моделирование поперечно-изгибных колебаний стержня")
-    root2.geometry("700x560+310+20")
+    root2.geometry("730x560+310+20")
 
-    # root2.resizable(False, False)
+    root2.resizable(False, False)
 
     def clean():  # обработчик кнопки очистка
         e_e.delete(0, END)
-        j_e.delete(0, END)
+        d_max_e.delete(0, END)
+        d_min_e.delete(0, END)
         P_e.delete(0, END)
         n_e.delete(0, END)
         w_e.delete(0, END)
         p_e.delete(0, END)
-        s_e.delete(0, END)
+        # s_e.delete(0, END)
         l_e.delete(0, END)
         time_e.delete(0, END)
         #####
@@ -849,42 +854,63 @@ def sterg2():
         r_var.set(0)
         q1.delete("txt")
 
-    def tableSterg():
-        e, j, p_nagruzka, upr_koef, w, p, s, len_sterg, time, c0, cz = bspi.get_values(e_e,
-                                                                                       j_e, P_e, n_e, w_e, p_e, s_e,
-                                                                                       l_e,
-                                                                                       time_e, c0_e, cz_e)
+    def tableSterg2():
+        e, p_nagruzka, upr_koef, w, p, d_max, d_min, len_sterg, time, c0, cz = bspi.get_values(e_e, P_e, n_e, w_e, p_e,
+                                                                                               d_max_e, d_min_e, l_e,
+                                                                                               time_e, c0_e, cz_e)
+        # print(e, p_nagruzka, upr_koef, w, p, d_max, d_min, len_sterg, time, c0, cz, sep="\n")
+
         radiobutton_value = r_var.get()
         error_cheek = 0
+        j = bspi.compute_j(d_max, d_min)
+        s = bspi.compute_s(d_max, d_min)
         ##заполнение таблицы
         bspi.table_writer(q1, bspi.compute_table(radiobutton_value, len_sterg, e, j))
+        # w,_=bspi.compute_table2(radiobutton_value, len_sterg, e, bspi.compute_j(d_max, d_min),
+        #       bspi.compute_s(d_max, d_min), p)
         ######################
         # region условия радиокнопки определяющие тип граничных условий
         try:
-            if radiobutton_value == 0:
-                pass  # место для функции вычисления изгибов при данных  граничных условиях
-            elif radiobutton_value == 1:
-                lx, ly = bspi.u_list_1(p, bspi.compute_s(0.12, 0.1), w, e, bspi.compute_j(0.12, 0.1), c0, cz, len_sterg)
-            elif radiobutton_value == 2:
-                lx, ly = bspi.u_list_2(p, bspi.compute_s(0.12, 0.1), w, e, bspi.compute_j(0.12, 0.1), c0, len_sterg)
-            elif radiobutton_value == 3:
-                lx, ly = bspi.u_list_3(p, bspi.compute_s(0.12, 0.1), w, e, bspi.compute_j(0.12, 0.1), c0, len_sterg)
 
-            if None in (lx, ly):
-                raise ZeroDivisionError
+            #####
+            l = bspi.natural_frequency(radiobutton_value, len_sterg, e, j, s, p)
+            l.reverse()
+
+            lx = []
+            ly = []
+            #####
+            for w in l:
+                if radiobutton_value == 0:
+                    x, y = bspi.u_list_0(p, s, w, e, j, len_sterg)
+                elif radiobutton_value == 1:
+                    x, y = bspi.u_list_1(p, s, w, e, j, len_sterg)
+                elif radiobutton_value == 2:
+                    x, y = bspi.u_list_2(p, s, w, e, j, c0, len_sterg)
+                elif radiobutton_value == 3:
+                    x, y = bspi.u_list_3(p, s, w, e, j, c0, len_sterg)
+                if None in (x, y):
+                    raise ZeroDivisionError
+                lx.append((x))
+                ly.append((y))
+
+
         except ValueError:
             mbox.showerror("Ошибка", "Отрицательное число под корнем")
             error_cheek += 1
         except ZeroDivisionError:
             mbox.showerror("Ошибка", "Происходит деление на ноль")
             error_cheek += 1
-        except:
-            mbox.showerror("Ошибка", "Неизвстная ошибка при вычислении")
-            error_cheek += 1
+        # except:
+        #     mbox.showerror("Ошибка", "Неизвстная ошибка при вычислении")
+        #     error_cheek += 1
         # endregion
 
         if error_cheek == 0:  # отрисовка графика
-            bspi.pain_grath(r_var1.get(), lx, ly, w, upr_koef, time)
+            # bspi.paint_grath(r_var1.get(), lx[i], ly[i], l[i], p, time, radiobutton_value)
+            bspi.paint_grath2(lx, ly, l,radiobutton_value)
+            lx.clear()
+            ly.clear()
+            l.clear()
 
     ###отрисовка интерфеса данного окна
     q1 = Canvas(root2, width=430, height=400, bg="white")
@@ -924,13 +950,16 @@ def sterg2():
     #####
 
     E_l = Label(root2, text="E=")
-    J_l = Label(root2, text="J=")
+
+    d_max_l = Label(root2, text="D=")
+    d_min_l = Label(root2, text="d=")
+
     P_l = Label(root2, text="P=")
     n_l = Label(root2, text="n=")
     w_l = Label(root2, text="w=")
     t_l = Label(root2, text="точность=")
     p_l = Label(root2, text="p=")
-    s_l = Label(root2, text="s=")
+    # s_l = Label(root2, text="s=")
     l_l = Label(root2, text="l=")
     time_l = Label(root2, text="время=")
 
@@ -941,13 +970,16 @@ def sterg2():
     ##########
 
     E_l.grid(row=9, column=0, sticky=W)
-    J_l.grid(row=10, column=0, sticky=W)
-    P_l.grid(row=11, column=0, sticky=W)
-    n_l.grid(row=12, column=0, sticky=W)
-    w_l.grid(row=13, column=0, sticky=W)
+
+    d_max_l.grid(row=10, column=0, sticky=W)
+    d_min_l.grid(row=11, column=0, sticky=W)
+
+    P_l.grid(row=12, column=0, sticky=W)
+    n_l.grid(row=13, column=0, sticky=W)
+    w_l.grid(row=10, column=4, sticky=W)
 
     p_l.grid(row=9, column=4, sticky=W)
-    s_l.grid(row=10, column=4, sticky=W)
+    # s_l.grid(row=10, column=4, sticky=W)
     l_l.grid(row=11, column=4, sticky=W)
     time_l.grid(row=12, column=4, sticky=W)
 
@@ -958,13 +990,16 @@ def sterg2():
     # Entry
 
     e_e = Entry(root2)
-    j_e = Entry(root2)
+
+    d_max_e = Entry(root2)
+    d_min_e = Entry(root2)
+
     P_e = Entry(root2)
     n_e = Entry(root2)
     w_e = Entry(root2)
 
     p_e = Entry(root2)
-    s_e = Entry(root2)
+    # s_e = Entry(root2)
     l_e = Entry(root2)
     time_e = Entry(root2)
 
@@ -973,24 +1008,35 @@ def sterg2():
     cz_e = Entry(root2, width=15)
     a_e = Entry(root2, width=15)
     #####
+
     ######
+    e_e.insert(0, 0.89)
+    d_max_e.insert(0, 0.12)
+    d_min_e.insert(0, 0.1)
+    P_e.insert(0, 12)
+    n_e.insert(0, 2)
+
     p_e.insert(0, 7800)
     # s_e.insert(0, 4)
-    w_e.insert(0, 5)
-    e_e.insert(0, 0.89)
-    # j_e.insert(0, 5)
+    w_e.insert(0, 1)
+    time_e.insert(0, 0)
+    # d_max_e.insert(0, 5)
     c0_e.insert(0, 0.2 * 10 ** 3)
     cz_e.insert(0, 1 * 10 ** 6)
     l_e.insert(0, 1)
     ######
+
     e_e.grid(row=9, column=1, columnspan=2)
-    j_e.grid(row=10, column=1, columnspan=2)
-    P_e.grid(row=11, column=1, columnspan=2)
-    n_e.grid(row=12, column=1, columnspan=2)
-    w_e.grid(row=13, column=1, columnspan=2)
+
+    d_max_e.grid(row=10, column=1, columnspan=2)
+    d_min_e.grid(row=11, column=1, columnspan=2)
+
+    P_e.grid(row=12, column=1, columnspan=2)
+    n_e.grid(row=13, column=1, columnspan=2)
+    w_e.grid(row=10, column=5, columnspan=2)
 
     p_e.grid(row=9, column=5, columnspan=2)
-    s_e.grid(row=10, column=5, columnspan=2)
+    # s_e.grid(row=10, column=5, columnspan=2)
     l_e.grid(row=11, column=5, columnspan=2)
     time_e.grid(row=12, column=5, columnspan=2)
 
@@ -998,27 +1044,37 @@ def sterg2():
     cz_e.grid(row=7, column=11, sticky=NW)
     # a_e.grid(row=7, column=11, sticky=NW)
 
+    # frame
+
+    button_frame = Frame(root2)
+    button_frame.grid(row=11, column=10, columnspan=6, rowspan=3)
+    button_frame_2 = Frame(button_frame)
+
     # Button
-    b1 = Button(root2, text="Рассчитать", bg="orange", command=tableSterg)
-    b1.grid(row=13, column=11)
+    b1 = Button(button_frame, text="Рассчитать", bg="orange", width=14, command=tableSterg2)
+    # b1.grid(row=13, column=11)
 
-    b2 = Button(root2, text="Очистить", bd=0, command=clean)
-    b2.grid(row=13, column=10)
+    b2 = Button(button_frame, text="Очистить", width=14, command=clean)
+    # b2.grid(row=13, column=10)
 
-    b3 = Button(root2, text="Расчитать собственные частоты", width=27,
+    b3 = Button(button_frame, text="Расчитать собственные частоты", width=30,
                 command=lambda: bspi.table_writer(q1, bspi.compute_table(int(r_var.get()), float(l_e.get()),
-                                                                         float(e_e.get()), float(j_e.get()))))
-
-    b3.grid(row=12, column=10, columnspan=2)
+                                                                         float(e_e.get()), float(d_max_e.get()))))
+    b3.pack(side=TOP)
+    button_frame_2.pack(side=TOP)
+    b2.pack(side=LEFT)
+    b1.pack(side=RIGHT)
 
     # Radiobutton
     r_var = IntVar()
     r_var.set(0)
     r_1 = Radiobutton(root2, text="Защемлённый стержень", variable=r_var, value=0)
     r_2 = Radiobutton(root2, text="Шарнирно-опёртый стержень", variable=r_var, value=1)
-    r_3 = Radiobutton(root2, text="Шарнирно-опёртый стержень на \nупругой опоре (абсолютно жёсткие опоры)",
+    r_3 = Radiobutton(root2,
+                      text="Шарнирно-опёртый стержень на \nупругой опоре (абсолютно жёсткие опоры)\n(требуются дополнительные данные)",
                       variable=r_var, value=2)
-    r_4 = Radiobutton(root2, text="Шарнирно-опёртый стержень на \nупругой опоре (абсолютно податливые опоры)",
+    r_4 = Radiobutton(root2,
+                      text="Шарнирно-опёртый стержень на \nупругой опоре (абсолютно податливые опоры)\n(требуются дополнительные данные)",
                       variable=r_var, value=3)
     r_1.grid(row=1, column=10, columnspan=3, sticky=W)
     r_2.grid(row=2, column=10, columnspan=3, sticky=W)
