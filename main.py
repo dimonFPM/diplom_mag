@@ -855,7 +855,7 @@ def sterg2():
         q1.delete("txt")
 
     def tableSterg2():
-        e, p_nagruzka, upr_koef, w, p, d_max, d_min, len_sterg, time, c0, cz = bspi.get_values(e_e, P_e, n_e, w_e, p_e,
+        e, p_nagruzka, w, p, d_max, d_min, len_sterg, time, c0, cz = bspi.get_values(e_e, P_e, w_e, p_e,
                                                                                                d_max_e, d_min_e, l_e,
                                                                                                time_e, c0_e, cz_e)
         # print(e, p_nagruzka, upr_koef, w, p, d_max, d_min, len_sterg, time, c0, cz, sep="\n")
@@ -955,7 +955,7 @@ def sterg2():
     d_min_l = Label(root2, text="d=")
 
     P_l = Label(root2, text="P=")
-    n_l = Label(root2, text="n=")
+    # n_l = Label(root2, text="n=")
     w_l = Label(root2, text="w=")
     t_l = Label(root2, text="точность=")
     p_l = Label(root2, text="p=")
@@ -975,7 +975,7 @@ def sterg2():
     d_min_l.grid(row=11, column=0, sticky=W)
 
     P_l.grid(row=12, column=0, sticky=W)
-    n_l.grid(row=13, column=0, sticky=W)
+    # n_l.grid(row=13, column=0, sticky=W)
     w_l.grid(row=10, column=4, sticky=W)
 
     p_l.grid(row=9, column=4, sticky=W)
@@ -995,7 +995,7 @@ def sterg2():
     d_min_e = Entry(root2)
 
     P_e = Entry(root2)
-    n_e = Entry(root2)
+    # n_e = Entry(root2)
     w_e = Entry(root2)
 
     p_e = Entry(root2)
@@ -1014,7 +1014,7 @@ def sterg2():
     d_max_e.insert(0, 0.12)
     d_min_e.insert(0, 0.1)
     P_e.insert(0, 12)
-    n_e.insert(0, 2)
+    # n_e.insert(0, 2)
 
     p_e.insert(0, 7800)
     # s_e.insert(0, 4)
@@ -1032,7 +1032,7 @@ def sterg2():
     d_min_e.grid(row=11, column=1, columnspan=2)
 
     P_e.grid(row=12, column=1, columnspan=2)
-    n_e.grid(row=13, column=1, columnspan=2)
+    # n_e.grid(row=13, column=1, columnspan=2)
     w_e.grid(row=10, column=5, columnspan=2)
 
     p_e.grid(row=9, column=5, columnspan=2)
