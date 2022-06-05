@@ -49,18 +49,18 @@ def frequency2(k):  # sin
 
 
 def frequency3(k):
-    # if k == 1:
-    #     return 1.46946
-    # elif k == 2:
-    #     return 4.61446
-    # elif k == 3:
-    #     return 4.99379
     if k == 1:
-        return 0.32477
+        return 1.46946
     elif k == 2:
-        return 1.45742
+        return 4.61446
     elif k == 3:
-        return 4.71046
+        return 4.99379
+    # if k == 1:
+    #     return 0.32477
+    # elif k == 2:
+    #     return 1.45742
+    # elif k == 3:
+    #     return 4.71046
 
 
 # def frequency3(p, s, e, j, c0, cz, len_sterg):
@@ -76,6 +76,22 @@ def frequency3(k):
 #         lx.append(x)
 #         ly.append(slog1 + slog2 + slog3)
 #     return lx, ly
+def compute_frequency0_test(l, e, j, m, k):
+    fre = frequency0(k)
+    print(f"частота ={fre}")
+    return (((fre ** 2) / l ** 2) * math.sqrt(e * j / m)), fre
+
+
+def compute_frequency1_test(l, e, j, m, k):  # шарнир
+    fre = frequency2(k)
+    print(f"частота ={fre}")
+    return ((fre ** 2 / l ** 2) * math.sqrt(e * j / m)), fre
+
+
+def compute_frequency4_test(l, e, j, m, k):  # упругое основание
+    fre = frequency3(k)
+    print(f"частота ={fre}")
+    return (((fre ** 2) / l ** 2) * math.sqrt(e * j / m)), fre
 
 
 def compute_frequency0(l, e, j, m, k):  # защем
@@ -86,7 +102,6 @@ def compute_frequency0(l, e, j, m, k):  # защем
 
 def compute_frequency1(l, e, j, m, k):  # шарнир
     fre = frequency2(k)
-    print(fre)
     return ((fre ** 2 / l ** 2) * math.sqrt(e * j / m))
 
 
@@ -160,6 +175,24 @@ def natural_frequency(radiobutton_value, len_sterg, e, j, s, p, colvo=3):
     return res_list
 
 
+def n_f(radiobutton_value, len_sterg, e, j, s, p, k):
+    print(f"k={k}")
+    m = s * len_sterg * p
+    print(f"m={m}\n"
+          f"e={e}\n"
+          f"j={j:.7f}")
+    if radiobutton_value == 0:  # защем
+        return compute_frequency0_test(len_sterg, e, j, m, k)
+    elif radiobutton_value == 1:  # шарнир
+        return compute_frequency1_test(len_sterg, e, j, m, k)
+    elif radiobutton_value == 2:  # жёсткие опоры
+        compute_frequency2(len_sterg, e, j, m, k)
+    elif radiobutton_value == 3:  # не жёсткие опоры
+        compute_frequency3(len_sterg, e, j, m, k)
+    elif radiobutton_value == 4:  # упругое основание
+        return compute_frequency4_test(len_sterg, e, j, m, k)
+
+
 def table_writer(canvas: tkinter.Canvas, res_list: tuple):
     canvas.delete("txt")
     y = 80
@@ -206,6 +239,90 @@ def compute_s(d_max, d_min):
     return math.pi / 4 * (d_max ** 2 - d_min ** 2)
 
 
+# region новые варианты вычислений
+
+
+def u_list_0_test(p, s, e, j, len_sterg, k, shag=0.001) -> (tuple, list) or (None, None):
+    l = n_f(0, len_sterg, e, j, s, p, k)
+    print(l)
+    result_list = []
+    x_list = []
+    # a = compute_a1(p, s, w, e, j)
+    # if a is None:  # в а возникает деление на 0
+    #     return None, None
+    for x in np.arange(0, len_sterg + shag, shag):
+        result_list.append(
+            (math.sinh(l[1] * len_sterg) + math.sin(l[1] * len_sterg)) * (math.cosh(l[1] * x) - math.cos(l[1] * x)) - (
+                    math.cosh(l[1] * len_sterg) + math.cos(l[1] * len_sterg)) * (
+                    math.sinh(l[1] * x) - math.sin(l[1] * x)))
+        # result_list.append(
+        #     (math.sin(a * len_sterg) - math.sinh(a * len_sterg)) * (math.cosh(a * x) - math.cos(a * x)) - (
+        #             math.cosh(a * len_sterg) - math.cos(a * len_sterg)) * (math.sinh(a * x) - math.sin(a * x)))
+        x_list.append(x)
+    return tuple(x_list), result_list[:], l[0]
+
+
+def u_list_1_test(p, s, e, j, len_sterg, k, shag=0.001) -> (tuple, list) or (None, None):
+    l = n_f(1, len_sterg, e, j, s, p, k)
+    print(l)
+
+    result_list = []
+    x_list = []
+    # # if not cz:  # при cz=0
+    # #     print("делелие на ноль cz")
+    # #     return None, None
+    # a = compute_a1(p, s, w, e, j)
+    # if a is None:  # в а возникает деление на 0
+    #     return None, None
+    # kr4_for_len_sterg = krilov_S4(a * len_sterg)
+    # if not kr4_for_len_sterg:  # возникнет деление на ноль
+    #     # print("деление на 0 kr4")
+    #     return None, None
+    # kr2_for_len_sterg = krilov_S2(a * len_sterg)
+    # kr3_for_len_sterg = krilov_S3(a * len_sterg)
+    # r = e * j * a ** 3 / cz
+    for x in np.arange(0, len_sterg + shag, shag):
+        #     slog1 = -krilov_S1(a * x) * r
+        #     slog2 = krilov_S4(a * x)
+        #     slog3 = krilov_S2(a * x) / kr4_for_len_sterg
+        #     slog4 = r * kr3_for_len_sterg - kr2_for_len_sterg
+        # result_list.append(slog1 + slog2 + slog3 * slog4)
+        result_list.append(math.sin(x * l[1]))
+        x_list.append(x)
+    return tuple(x_list), result_list[:], l[0]
+
+
+def u_list_4_test(p, s, e, j, c0, cz, len_sterg, k, shag=0.001):
+    l = n_f(4, len_sterg, e, j, s, p, k)
+    print(l)
+    exit()
+    if cz == 0:
+        print("делелие на ноль cz")
+        return None
+    # a = compute_a2(p, s, w, e, j, c0, len_sterg)
+    # if a is None:  # возникает деление на ноль
+    #     return None, None
+    kr4_for_len_sterg = krilov_S4(l[1] * len_sterg)
+    if not kr4_for_len_sterg:  # возникнет деление на ноль
+        return None, None
+    result_list = []
+    x_list = []
+    r = e * j * l[1] ** 3 / cz
+    for x in np.arange(0, len_sterg + shag, shag):
+        slog1 = -krilov_S1(l[1] * x) * r
+        slog2 = krilov_S4(l[1] * x)
+        slog3 = krilov_S2(l[1] * x) / kr4_for_len_sterg
+        slog4 = r * krilov_S3(l[1] * len_sterg) - krilov_S2(l[1] * len_sterg)
+        result_list.append(slog1 + slog2 + slog3 * slog4)
+        if x == 0.5:
+            print("значение при x=0.5:", result_list[-1])
+        x_list.append(x)
+    return tuple(x_list), result_list, l[0]
+
+
+# endregion
+
+# region старые варианты вычислений
 def u(x, p, s, w, e, j, c0, cz, len_sterg):
     if cz == 0:
         print("делелие на ноль cz")
@@ -294,7 +411,7 @@ def u_list_3(p, s, w, e, j, c0, len_sterg, shag=0.001):
     return x_list, result_list
 
 
-def u_list_test(p, s, w, e, j, c0, cz, len_sterg, shag=0.001):
+def u_list_4(p, s, w, e, j, c0, cz, len_sterg, shag=0.001):
     if cz == 0:
         print("делелие на ноль cz")
         return None
@@ -318,6 +435,8 @@ def u_list_test(p, s, w, e, j, c0, cz, len_sterg, shag=0.001):
         x_list.append(x)
     return x_list, result_list
 
+
+# endregion
 
 def paint_grath(animate_check, lx, ly, w, p, time, radiobutton_check):
     lx, ly = np.array(lx), np.array(ly)
@@ -499,7 +618,7 @@ def main1(rad=0):
         elif rad == 3:
             x, y = u_list_3(p, s, i, e, j, c0, len_sterg)
         elif rad == 4:
-            x, y = u_list_test(p, s, i, e, j, c0, cz, len_sterg)
+            x, y = u_list_4(p, s, i, e, j, c0, cz, len_sterg)
 
         lx.append(x)
         ly.append(y)
@@ -578,15 +697,36 @@ def main4():
     l.reverse()
     print(l)
     for i in l:
-        x, y = u_list_test(p, s, i, e, j, c0, cz1, len_sterg)
+        x, y = u_list_4(p, s, i, e, j, c0, cz1, len_sterg)
         lx.append(x)
         ly.append(y)
     paint_grath2(lx, ly, l, 4)
+
+
+def main5():
+    len_sterg = 1
+    e = 0.89
+    # e = 1
+    j = compute_j(0.12, 0.1)
+    # j = 1
+    s = compute_s(0.12, 0.1)
+    p = 7800
+    cz1 = 100000000
+    cz2 = 100000000
+    c0 = 2000
+    for k in range(1, 4):
+        # lx, ly, f = u_list_0_test(p, s, e, j, len_sterg, k)
+        lx, ly, f = u_list_4_test(p, s, e, j, c0, cz1, len_sterg, k)
+        plt.plot(lx, ly, label=f"w={f}")
+    plt.grid()
+    plt.legend()
+    plt.show()
 
 
 if __name__ == '__main__':
     # main1(0)
     # main2()
     # main3()
-    main4()
+    # main4()
     # print(krilov_S1(6.7))
+    main5()
