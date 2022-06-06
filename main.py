@@ -833,14 +833,14 @@ def sterg2():
     root2.title("Моделирование поперечно-изгибных колебаний стержня")
     root2.geometry("730x560+310+20")
 
-    root2.resizable(False, False)
+    # root2.resizable(False, False)
 
     def clean():  # обработчик кнопки очистка
         e_e.delete(0, END)
         d_max_e.delete(0, END)
         d_min_e.delete(0, END)
         P_e.delete(0, END)
-        n_e.delete(0, END)
+        # n_e.delete(0, END)
         w_e.delete(0, END)
         p_e.delete(0, END)
         # s_e.delete(0, END)
@@ -856,8 +856,8 @@ def sterg2():
 
     def tableSterg2():
         e, p_nagruzka, w, p, d_max, d_min, len_sterg, time, c0, cz = bspi.get_values(e_e, P_e, w_e, p_e,
-                                                                                               d_max_e, d_min_e, l_e,
-                                                                                               time_e, c0_e, cz_e)
+                                                                                     d_max_e, d_min_e, l_e,
+                                                                                     time_e, c0_e, cz_e)
         # print(e, p_nagruzka, upr_koef, w, p, d_max, d_min, len_sterg, time, c0, cz, sep="\n")
 
         radiobutton_value = r_var.get()
@@ -888,6 +888,8 @@ def sterg2():
                     x, y = bspi.u_list_2(p, s, w, e, j, c0, len_sterg)
                 elif radiobutton_value == 3:
                     x, y = bspi.u_list_3(p, s, w, e, j, c0, len_sterg)
+                elif radiobutton_value == 4:
+                    x, y = bspi.u_list_4(p, s, w, e, j, c0, cz, len_sterg)
                 if None in (x, y):
                     raise ZeroDivisionError
                 lx.append((x))
@@ -907,7 +909,7 @@ def sterg2():
 
         if error_cheek == 0:  # отрисовка графика
             # bspi.paint_grath(r_var1.get(), lx[i], ly[i], l[i], p, time, radiobutton_value)
-            bspi.paint_grath2(lx, ly, l,radiobutton_value)
+            bspi.paint_grath2(lx, ly, l, radiobutton_value)
             lx.clear()
             ly.clear()
             l.clear()
@@ -1076,15 +1078,19 @@ def sterg2():
     r_4 = Radiobutton(root2,
                       text="Шарнирно-опёртый стержень на \nупругой опоре (абсолютно податливые опоры)\n(требуются дополнительные данные)",
                       variable=r_var, value=3)
+    r_5 = Radiobutton(root2,
+                      text="Шарнирно-опёртый стержень на \nупругом основании\n(требуются дополнительные данные)",
+                      variable=r_var, value=4)
     r_1.grid(row=1, column=10, columnspan=3, sticky=W)
     r_2.grid(row=2, column=10, columnspan=3, sticky=W)
-    r_3.grid(row=3, column=10, columnspan=3, sticky=W)
-    r_4.grid(row=4, column=10, columnspan=3, sticky=W)
+    # r_3.grid(row=3, column=10, columnspan=3, sticky=W)
+    # r_4.grid(row=4, column=10, columnspan=3, sticky=W)
+    r_5.grid(row=3, column=10, columnspan=3, sticky=W)
     # checkbutton
     r_var1 = IntVar()
     r_var1.set(0)
     ch1 = Checkbutton(root2, text="Анимация", variable=r_var1, onvalue=1, offvalue=0)
-    ch1.grid(row=9, column=10, sticky=W)
+    # ch1.grid(row=9, column=10, sticky=W)
     root2.mainloop()
 
 
